@@ -32,7 +32,7 @@ function Register() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/users/login", {
+      const res = await axios.post("https://relayy-backend-9war.onrender.com/api/v1/users/login", {
         username,
         password,
       });
@@ -55,7 +55,7 @@ function Register() {
     }
 
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/users/register", {
+      const res = await axios.post("https://relayy-backend-9war.onrender.com/api/v1/users/register", {
         username,
         email,
         password,
@@ -76,7 +76,7 @@ function Register() {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/api/v1/users/verify-otp", { email, otp });
+      await axios.post("https://relayy-backend-9war.onrender.com/api/v1/users/verify-otp", { email, otp });
       alert("Email verified successfully! You can now login.");
       setIsLogin(true);
       setShowOtp(false);
