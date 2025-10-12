@@ -1,6 +1,5 @@
 import React from "react";
 import Navbar from "../Navbar";
-import Footer from "../footer";
 import Hero from "./Hero";
 import Getintouch from "./Getintouch";
 

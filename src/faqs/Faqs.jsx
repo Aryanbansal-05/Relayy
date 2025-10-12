@@ -1,6 +1,5 @@
 import React from "react";
 import Navbar from "../Navbar";
-import Footer from "../footer";
 import Header from "../components/Header"; // same header component
 
 function Faqs() {
