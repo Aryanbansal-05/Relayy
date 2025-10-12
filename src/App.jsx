@@ -5,7 +5,7 @@ import Product_page from "./Product_details/Product_page";
 import Contact_page from "./contactUs/Contact_page";
 import About from "./AboutUs/About";
 import Register from "./register/Register_page";
-import Footer from "./footer";
+import Footer from "./Footer";
 import { ReactLenis } from "lenis/react";
 import ScrollOnTop from "./components/ScrollOnTop";
 import Faqs from "./faqs/Faqs";
