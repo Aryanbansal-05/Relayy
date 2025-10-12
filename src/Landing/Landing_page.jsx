@@ -2,7 +2,7 @@ import React from 'react';
 import Hero from './Hero';
 import Leftss from '../components/Leftss';
 import Rightss from '../components/Rightss';
-import Joining from './joining';
+import Joining from './Joining';
 import Header from '../components/Header';
 
 function Landing_page() {
