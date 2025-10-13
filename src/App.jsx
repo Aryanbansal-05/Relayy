@@ -9,6 +9,7 @@ import Footer from "./Footer";
 import { ReactLenis } from "lenis/react";
 import ScrollOnTop from "./components/ScrollOnTop";
 import Faqs from "./faqs/Faqs";
+import Forgot from "./Forgot";
 function App() {
   return (
      <ReactLenis
@@ -29,6 +30,7 @@ function App() {
           <Route path="/faqs" element={<Faqs />} />
           <Route path="/about" element={<About />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/Forgot" element={<Forgot/>}/>
         </Routes>
       </BrowserRouter>
       <Footer />
