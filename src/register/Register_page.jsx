@@ -7,40 +7,41 @@ import { useLocation } from "react-router";
 
 function Register() {
   const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const mode = queryParams.get("mode");
+  const queryParams = new URLSearchParams(location.search);
+  const mode = queryParams.get("mode");
 
-    // Set login/signup based on ?mode=
-    const [isLogin, setIsLogin] = useState(mode !== "signup");
+  const [isLogin, setIsLogin] = useState(mode !== "signup");
+  const [isLoading, setIsLoading] = useState(false); // ✅ Loader state
 
-    // Optional: updates when URL changes (e.g. user toggles)
-    useEffect(() => {
+  useEffect(() => {
     setIsLogin(mode !== "signup");
-    }, [mode]);
-
+  }, [mode]);
 
   // ✅ Form states
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState(""); 
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); 
-  const [otp, setOtp] = useState(""); // For OTP verification
-  const [showOtp, setShowOtp] = useState(false); // Show OTP input after signup
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [otp, setOtp] = useState("");
+  const [showOtp, setShowOtp] = useState(false);
   const navigate = useNavigate();
 
   // ---------------- LOGIN HANDLER ----------------
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://relayy-backend-9war.onrender.com/api/v1/users/login", {
-        username,
-        password,
-      });
-      console.log(res.data);
-      localStorage.setItem("token", res.data.token); // Save JWT token
-      navigate("/home");
+      setIsLoading(true); // ✅ Show loader
+      const res = await axios.post(
+        "https://relayy-backend-9war.onrender.com/api/v1/users/login",
+        { username, password }
+      );
+      localStorage.setItem("token", res.data.token);
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate("/home");
+      }, 1000);
     } catch (err) {
-      console.error(err.response?.data || err.message);
+      setIsLoading(false);
       alert(err.response?.data?.message || "Login failed");
     }
   };
@@ -48,35 +49,36 @@ function Register() {
   // ---------------- SIGNUP HANDLER ----------------
   const handleSignup = async (e) => {
     e.preventDefault();
-
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
 
     try {
-      const res = await axios.post("https://relayy-backend-9war.onrender.com/api/v1/users/register", {
+      setIsLoading(true); // ✅ Show loader
+      await axios.post("https://relayy-backend-9war.onrender.com/api/v1/users/register", {
         username,
         email,
         password,
       });
-      console.log(res.data);
-      setIsLogin(true); // Switch to login form after signup
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      navigate("/home");
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate("/home");
+      }, 1000);
     } catch (err) {
-      console.error(err.response?.data || err.message);
+      setIsLoading(false);
       alert(err.response?.data?.message || "Signup failed");
     }
   };
+
   // ---------------- VERIFY OTP ----------------
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://relayy-backend-9war.onrender.com/api/v1/users/verify-otp", { email, otp });
+      await axios.post("https://relayy-backend-9war.onrender.com/api/v1/users/verify-otp", {
+        email,
+        otp,
+      });
       alert("Email verified successfully! You can now login.");
       setIsLogin(true);
       setShowOtp(false);
@@ -91,7 +93,14 @@ function Register() {
   };
 
   return (
-    <div className="font-josefin">
+    <div className="font-josefin relative">
+      {/* ✅ Loader Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-white/80 flex justify-center items-center z-50 transition-opacity duration-300">
+          <div className="loader"></div>
+        </div>
+      )}
+
       {/* ✅ Navbar */}
       <div className="w-full">
         <Navbar />
@@ -130,134 +139,131 @@ function Register() {
               )}
             </p>
 
-            {/* Form Content */}
-            {/* Form Content */}
-{isLogin ? (
-  // ---------------- LOGIN FORM ----------------
-  <form className="space-y-4" onSubmit={handleLogin}>
-    <div>
-      <label className="text-sm text-gray-600">Username</label>
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
-        required
-      />
-    </div>
+            {/* ---------------- LOGIN FORM ---------------- */}
+            {isLogin ? (
+              <form className="space-y-4" onSubmit={handleLogin}>
+                <div>
+                  <label className="text-sm text-gray-600">Username</label>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+                    required
+                  />
+                </div>
 
-    <div>
-      <label className="text-sm text-gray-600">Password</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
-        required
-      />
-    </div>
+                <div>
+                  <label className="text-sm text-gray-600">Password</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+                    required
+                  />
+                </div>
 
-    <button
-      type="submit"
-      className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition"
-    >
-      Login
-    </button>
+                <button
+                  type="submit"
+                  className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition"
+                >
+                  Login
+                </button>
 
-    <div className="text-center">
-      <a href="/forgot" className="text-xs text-gray-500 hover:underline">
-        Forgot Your Password?
-      </a>
-    </div>
-  </form>
-) : (
-  // ---------------- SIGNUP FORM ----------------
-  <>
-    <form className="space-y-4" onSubmit={handleSignup}>
-      <div>
-        <label className="text-sm text-gray-600">Username</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
-          required
-        />
-      </div>
+                <div className="text-center">
+                  <a href="/forgot" className="text-xs text-gray-500 hover:underline">
+                    Forgot Your Password?
+                  </a>
+                </div>
+              </form>
+            ) : (
+              // ---------------- SIGNUP FORM ----------------
+              <>
+                <form className="space-y-4" onSubmit={handleSignup}>
+                  <div>
+                    <label className="text-sm text-gray-600">Username</label>
+                    <input
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+                      required
+                    />
+                  </div>
 
-      <div>
-        <label className="text-sm text-gray-600">College Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
-          required
-        />
-      </div>
+                  <div>
+                    <label className="text-sm text-gray-600">College Email</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+                      required
+                    />
+                  </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm text-gray-600">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
-            required
-          />
-        </div>
-        <div>
-          <label className="text-sm text-gray-600">Confirm Password</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
-            required
-          />
-        </div>
-      </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm text-gray-600">Password</label>
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-gray-600">Confirm Password</label>
+                      <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+                        required
+                      />
+                    </div>
+                  </div>
 
-      <div className="flex items-center space-x-2 text-sm">
-        <input type="checkbox" className="w-4 h-4" required />
-        <span>
-          I have read and agreed to the Terms of Service and Privacy Policy
-        </span>
-      </div>
+                  <div className="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" className="w-4 h-4" required />
+                    <span>
+                      I have read and agreed to the Terms of Service and Privacy Policy
+                    </span>
+                  </div>
 
-      <button
-        type="submit"
-        className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition"
-      >
-        Create Account
-      </button>
-    </form>
+                  <button
+                    type="submit"
+                    className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition"
+                  >
+                    Create Account
+                  </button>
+                </form>
 
-    {/* ---------------- OTP FORM ---------------- */}
-    {showOtp && (
-      <form className="space-y-4 mt-4" onSubmit={handleVerifyOtp}>
-        <div>
-          <label className="text-sm text-gray-600">Enter OTP sent to your email</label>
-          <input
-            type="text"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-        >
-          Verify OTP
-        </button>
-      </form>
-    )}
-  </>
-)}
-
+                {/* ---------------- OTP FORM ---------------- */}
+                {showOtp && (
+                  <form className="space-y-4 mt-4" onSubmit={handleVerifyOtp}>
+                    <div>
+                      <label className="text-sm text-gray-600">Enter OTP sent to your email</label>
+                      <input
+                        type="text"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+                    >
+                      Verify OTP
+                    </button>
+                  </form>
+                )}
+              </>
+            )}
           </div>
 
           {/* Right Side (Gray Placeholder) */}
