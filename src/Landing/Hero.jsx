@@ -23,7 +23,7 @@ function Hero() {
 
                     <div className="flex space-x-3">
                         <a
-                            onClick={() => navigate("/register?mode=login")}
+                            onClick={() => navigate("/register")}
                             className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
                         >
                             Login
