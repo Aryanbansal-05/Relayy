@@ -205,7 +205,7 @@ const handleSignup = async (e) => {
                 </button>
 
                 <div className="text-center">
-                  <a href="/Forgot" className="text-xs text-gray-500 hover:underline">
+                  <a href="/forgot" className="text-xs text-gray-500 hover:underline">
                     Forgot Your Password?
                   </a>
                 </div>
