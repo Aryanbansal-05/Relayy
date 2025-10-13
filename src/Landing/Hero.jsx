@@ -28,9 +28,6 @@ function Hero() {
                         >
                             Login
                         </a>
-                        <a className="px-4 py-2 bg-purple-800 text-white rounded-lg hover:bg-purple-900 transition" href="/register">
-                            SignUp
-                        </a>
                     </div>
                 </header>
 
