@@ -1,13 +1,17 @@
 import React from "react";
 import { Search } from "lucide-react";
+import relayyLogo from './relayy(logo).svg'; 
+
 
 function Navbar({ searchQuery, setSearchQuery }) {
     return (
         <nav className="w-full bg-white shadow-sm px-20 py-10 flex items-center justify-between ">
             {/* Logo */}
-            <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-gray-300"></div>
-                <a className="text-xl font-bold text-purple-800" href="/">RELAYY</a>
+            <div className="flex items-center">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center mr-1">
+                <img src={relayyLogo} alt="Relayy Logo" className="w-8 h-8" />
+            </div>
+            <a className="text-xl font-bold text-purple-800" href="/">RELAYY</a>
             </div>
 
             {/* Center Links */}

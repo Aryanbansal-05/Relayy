@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import relayyLogo from '../relayy(logo).svg'; 
+
 
 function Hero() {
     const navigate = useNavigate();
@@ -9,8 +11,10 @@ function Hero() {
             <section className="relative bg-white overflow-hidden">
                 {/* Navbar */}
                 <header className="w-[95 %] mx-auto px-6 lg:px-12 py-6 flex items-center justify-between mt-10">
-                    <div className="flex items-center space-x-2">
-                        <div className="w-6 h-6 rounded-full bg-gray-300"></div>
+                    <div className="flex items-center">
+                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mr-1">
+                            <img src={relayyLogo} alt="Relayy Logo" className="w-8 h-8" />
+                        </div>
                         <span className="font-bold text-purple-800 text-xl">RELAYY</span>
                     </div>
 
@@ -23,10 +27,14 @@ function Hero() {
 
                     <div className="flex space-x-3">
                         <a
-                            onClick={() => navigate("/register")}
+                            onClick={() => navigate("/register?mode=login")}
                             className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
                         >
                             Login
+                        </a>
+                        <a onClick={() => navigate("/register?mode=signup")}
+                        className="px-4 py-2 bg-purple-800 text-white rounded-lg hover:bg-purple-900 transition">
+                            SignUp
                         </a>
                     </div>
                 </header>

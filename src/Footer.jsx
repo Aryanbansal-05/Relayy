@@ -1,5 +1,7 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
+import relayyLogo from './relayy(logo).svg'; 
+
 
 function Footer() {
   return (
@@ -8,7 +10,9 @@ function Footer() {
         {/* Logo + About */}
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gray-400"></div>
+            <div className="w-8 h-8 rounded-full  flex items-center justify-center mr-1">
+                            <img src={relayyLogo} alt="Relayy Logo" className="w-8 h-8" />
+                        </div>
             <h2 className="text-xl font-bold text-white">RELAYY</h2>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
