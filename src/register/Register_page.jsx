@@ -26,50 +26,83 @@ function Register() {
   const [showOtp, setShowOtp] = useState(false);
   const navigate = useNavigate();
 
-  // ---------------- LOGIN HANDLER ----------------
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      setIsLoading(true); // ✅ Show loader
-      const res = await axios.post(
-        "https://relayy-backend-9war.onrender.com/api/v1/users/login",
-        { username, password }
-      );
-      localStorage.setItem("token", res.data.token);
-      setTimeout(() => {
-        setIsLoading(false);
-        navigate("/home");
-      }, 1000);
-    } catch (err) {
-      setIsLoading(false);
-      alert(err.response?.data?.message || "Login failed");
-    }
-  };
+// inside your Register component handlers (replace existing handlers)
 
-  // ---------------- SIGNUP HANDLER ----------------
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
+const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    setIsLoading(true);
+    const res = await axios.post(
+      "https://relayy-backend-9war.onrender.com/api/v1/users/login",
+      { username, password }
+    );
+
+    // Try to extract a user object from common API shapes:
+    const user = res.data?.user || res.data?.data || res.data || null;
+    const token = res.data?.token || (res.data?.data && res.data.data.token) || null;
+
+    if (token) localStorage.setItem("token", token);
+    if (user) {
+      // ensure user has an email property (backend should return it)
+      localStorage.setItem("user", JSON.stringify(user));
+      if (user.email) localStorage.setItem("userEmail", user.email);
+    } else if (res.data?.email) {
+      // fallback: backend returned just an email
+      localStorage.setItem("userEmail", res.data.email);
+      localStorage.setItem("user", JSON.stringify({ email: res.data.email, username }));
     }
 
-    try {
-      setIsLoading(true); // ✅ Show loader
-      await axios.post("https://relayy-backend-9war.onrender.com/api/v1/users/register", {
-        username,
-        email,
-        password,
-      });
-      setTimeout(() => {
-        setIsLoading(false);
-        navigate("/home");
-      }, 1000);
-    } catch (err) {
+    // small delay for loader UX
+    setTimeout(() => {
       setIsLoading(false);
-      alert(err.response?.data?.message || "Signup failed");
+      navigate("/home");
+    }, 800);
+  } catch (err) {
+    setIsLoading(false);
+    console.error(err.response?.data || err.message);
+    alert(err.response?.data?.message || "Login failed");
+  }
+};
+
+const handleSignup = async (e) => {
+  e.preventDefault();
+  if (password !== confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    setIsLoading(true);
+    const res = await axios.post(
+      "https://relayy-backend-9war.onrender.com/api/v1/users/register",
+      { username, email, password }
+    );
+
+    // Extract returned user and/or token if backend returns them
+    const user = res.data?.user || res.data?.data || (res.data?.email ? { email: res.data.email, username } : null);
+    const token = res.data?.token || (res.data?.data && res.data.data.token) || null;
+
+    if (token) localStorage.setItem("token", token);
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+      if (user.email) localStorage.setItem("userEmail", user.email);
+    } else {
+      // If backend doesn't return user, we have at least the email from the form:
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("user", JSON.stringify({ email, username }));
     }
-  };
+
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate("/home");
+    }, 800);
+  } catch (err) {
+    setIsLoading(false);
+    console.error(err.response?.data || err.message);
+    alert(err.response?.data?.message || "Signup failed");
+  }
+};
+
 
   // ---------------- VERIFY OTP ----------------
   const handleVerifyOtp = async (e) => {
