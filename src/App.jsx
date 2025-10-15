@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router";
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Landing_page from "./Landing/Landing_page";
 import Home_page from "./home/Home_page";
 import Product_page from "./Product_details/Product_page";
@@ -12,6 +12,7 @@ import Forgot from "./Forgot";
 import Login from "./register/Login";
 import Signup from "./register/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AutoRedirect from "./components/AutoRedirect"; // ✅ separate file (from above)
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -19,14 +20,7 @@ axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com";
 
 function App() {
   return (
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.05,
-        duration: 1,
-        smoothWheel: true,
-      }}
-    >
+    <ReactLenis root options={{ lerp: 0.05, duration: 1, smoothWheel: true }}>
       <BrowserRouter>
         <AutoRedirect />
         <Routes>
@@ -82,28 +76,6 @@ function App() {
       <Footer />
     </ReactLenis>
   );
-}
-
-// ✅ Auto redirect component — runs once on load
-function AutoRedirect() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const res = await axios.get("/api/v1/users/verify");
-        if (res.status === 200 && res.data.user) {
-          // already authenticated
-          navigate("/home", { replace: true });
-        }
-      } catch (err) {
-        // no valid session, stay on current route
-      }
-    };
-    checkSession();
-  }, [navigate]);
-
-  return null;
 }
 
 export default App;
