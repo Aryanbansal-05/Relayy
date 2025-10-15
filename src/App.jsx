@@ -14,6 +14,8 @@ import Signup from "./register/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AutoRedirect from "./components/AutoRedirect"; // ✅ separate file (from above)
 import axios from "axios";
+import Profile_page from "./Profile/Profile_page";
+import Seller_page from "./Profile/Seller_page";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com";
@@ -68,6 +70,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <About />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile_page />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/sell"
+            element={
+              <ProtectedRoute>
+                <Seller_page />
               </ProtectedRoute>
             }
           />

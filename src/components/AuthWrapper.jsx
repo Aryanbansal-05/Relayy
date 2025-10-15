@@ -6,12 +6,15 @@ const AuthWrapper = ({ children }) => {
   const [isChecking, setIsChecking] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-
+   const backendURL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:8000"
+      : "https://relayy-backend-9war.onrender.com";
   useEffect(() => {
     const verifySession = async () => {
       try {
         const res = await axios.get(
-          "https://relayy-backend-9war.onrender.com/api/v1/users/verify",
+         `${backendURL}/api/v1/users/verify`,
           { withCredentials: true }
         );
         if (res.status === 200) {

@@ -137,7 +137,8 @@ const Home_page = () => {
   return (
     <div id="/home" className="font-poppins">
       <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <Header title={user ? ` ${user.email.split("@")[1]}` : "Listings"} />
+     <Header title={user?.college ? `${user.college}` : "Your Listings"} />
+
       <div className="min-h-screen flex bg-gray-50">
         <Sidebar filters={filters} setFilters={setFilters} />
 

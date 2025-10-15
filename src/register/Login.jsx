@@ -9,14 +9,17 @@ function Login() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+   const backendURL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:8000"
+      : "https://relayy-backend-9war.onrender.com";
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       const res = await axios.post(
-        "https://relayy-backend-9war.onrender.com/api/v1/users/login",
+      `${backendURL}/api/v1/users/login`,
         { username, password },
         { withCredentials: true } // ✅ allows cookies
       );

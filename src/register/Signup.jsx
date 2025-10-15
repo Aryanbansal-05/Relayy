@@ -13,7 +13,10 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+   const backendURL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:8000"
+      : "https://relayy-backend-9war.onrender.com";
   const handleSignup = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) return alert("Passwords do not match");
@@ -21,7 +24,7 @@ function Signup() {
     setIsLoading(true);
     try {
       const res = await axios.post(
-        "https://relayy-backend-9war.onrender.com/api/v1/users/signup",
+        `${backendURL}/api/v1/users/login`,
         { username, email, college, hostel, password },
         { withCredentials: true }
       );

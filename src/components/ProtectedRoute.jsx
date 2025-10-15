@@ -6,12 +6,15 @@ import axios from "axios";
 const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
-
+   const backendURL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:8000"
+      : "https://relayy-backend-9war.onrender.com";
   useEffect(() => {
     const verifyUser = async () => {
       try {
         const res = await axios.get(
-          "https://relayy-backend-9war.onrender.com/api/v1/users/verify",
+          "http://localhost:8000/api/v1/users/verify",
           { withCredentials: true }
         );
 
