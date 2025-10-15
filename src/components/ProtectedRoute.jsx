@@ -35,6 +35,15 @@ const ProtectedRoute = ({ children }) => {
     verifyUser();
   });
 
+  // ✅ Show loader during verification
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-600 text-lg">
+        Checking session...
+      </div>
+    );
+  }
+
   // ✅ Redirect unauthenticated users to login
   return authenticated ? children : <Navigate to="/login" replace />;
 };
