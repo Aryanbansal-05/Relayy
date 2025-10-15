@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }) => {
     const verifyUser = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/api/v1/users/verify",
+          "https://relayy-backend-9war.onrender.com/api/v1/users/verify",
           { withCredentials: true }
         );
         if (res.status === 200) setIsAuthenticated(true);
