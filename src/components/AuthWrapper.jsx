@@ -46,14 +46,6 @@ const AuthWrapper = ({ children }) => {
     verifySession();
   }, [location.pathname, navigate]);
 
-  // ✅ Show loader while verifying
-  if (isChecking) {
-    return (
-      <div className="flex justify-center items-center h-screen text-lg text-gray-600">
-        Checking your session...
-      </div>
-    );
-  }
 
   return children;
 };
