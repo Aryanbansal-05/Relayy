@@ -27,12 +27,12 @@ function Hero() {
 
                     <div className="flex space-x-3">
                         <a
-                            onClick={() => navigate("/register?mode=login")}
+                            onClick={() => navigate("/login")}
                             className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
                         >
                             Login
                         </a>
-                        <a onClick={() => navigate("/register?mode=signup")}
+                        <a onClick={() => navigate("/signup")}
                         className="px-4 py-2 bg-purple-800 text-white rounded-lg hover:bg-purple-900 transition">
                             SignUp
                         </a>
@@ -51,7 +51,7 @@ function Hero() {
                                 and essentials right inside your campus. Save money, reduce waste, and
                                 find what you need from people you trust.
                             </p>
-                            <button onClick={() => navigate("/register?mode=signup")} className="bg-purple-800 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-900 transition">
+                            <button onClick={() => navigate("/signup")} className="bg-purple-800 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-900 transition">
                                 Start using Relayy
                             </button>
                         </div>

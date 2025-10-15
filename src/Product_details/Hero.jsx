@@ -228,9 +228,6 @@ export default function Hero() {
           </p>
         </Box>
       </Card>
-
-      {/* Related Products */}
-      <Related category={product.category} currentProductId={product.id} />
     </Box>
   );
 }
