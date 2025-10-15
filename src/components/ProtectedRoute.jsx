@@ -8,15 +8,10 @@ const ProtectedRoute = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(false);
 
   // ✅ Dynamically pick backend based on environment
-  const backendURL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:8000"
-      : "https://relayy-backend-9war.onrender.com";
-
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const res = await axios.get(`${backendURL}/api/v1/users/verify`, {
+        const res = await axios.get("https://relayy-backend-9war.onrender.com/api/v1/users/verify", {
           withCredentials: true, // ✅ sends cookies for auth
         });
 
@@ -38,7 +33,7 @@ const ProtectedRoute = ({ children }) => {
     };
 
     verifyUser();
-  }, [backendURL]);
+  });
 
   // ✅ Show loader during verification
   if (loading) {
