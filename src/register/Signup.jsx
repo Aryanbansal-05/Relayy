@@ -24,7 +24,7 @@ function Signup() {
     setIsLoading(true);
     try {
       const res = await axios.post(
-        `${backendURL}/api/v1/users/login`,
+        `${backendURL}/api/v1/users/signup`,
         { username, email, college, hostel, password },
         { withCredentials: true }
       );
