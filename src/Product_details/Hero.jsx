@@ -20,9 +20,11 @@ export default function Hero() {
   const [images, setImages] = useState([]);
   const [mainImage, setMainImage] = useState("");
 
-  useEffect(() => {
+ useEffect(() => {
+  setTimeout(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [id]);
+  }, 100); // small delay ensures it runs after image rendering
+}, [id]);
 
   useEffect(() => {
     const foundProduct = products.find((p) => p.id === Number(id));
