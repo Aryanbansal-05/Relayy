@@ -33,9 +33,9 @@ const Hero = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen text-lg text-gray-600">
-        Loading profile...
-      </div>
+      <div className="fixed inset-0 bg-white flex justify-center items-center z-50">
+          <div className="loader"></div>
+        </div>
     );
 
   return (

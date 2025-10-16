@@ -16,7 +16,7 @@ function Navbar({ searchQuery, setSearchQuery }) {
                 { withCredentials: true }
             );
             localStorage.clear();
-            window.location.href = "/"; // redirect to landing/login
+            window.location.href = "/"; // redirect to landing
         } catch (err) {
             console.error("Logout failed:", err);
         }

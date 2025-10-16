@@ -38,9 +38,9 @@ const ProtectedRoute = ({ children }) => {
   // ✅ Show loader during verification
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-gray-600 text-lg">
-        Checking session...
-      </div>
+       <div className="fixed inset-0 bg-white flex justify-center items-center z-50 min-h-screen">
+          <div className="loader"></div>
+        </div>
     );
   }
 
