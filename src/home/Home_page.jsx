@@ -1,176 +1,190 @@
+// src/pages/Home_page.jsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "./SideBar";
-import products from "../data/products";
 import Header from "../components/Header";
 import Navbar from "../Navbar";
+import axios from "axios";
 
-/**
- * Helper: decode JWT payload without library (very small, client-side)
- * returns parsed payload object or null
- */
 function decodeJwtPayload(token) {
   try {
-    const parts = token.split(".");
-    if (parts.length < 2) return null;
-    const payload = parts[1];
-    // base64url -> base64
-    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const json = decodeURIComponent(
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
       atob(base64)
         .split("")
-        .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-        })
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
         .join("")
     );
-    return JSON.parse(json);
-  } catch (e) {
+    return JSON.parse(jsonPayload);
+  } catch {
     return null;
   }
 }
 
 const Home_page = () => {
   const navigate = useNavigate();
-
   const [filters, setFilters] = useState({ categories: [], ratings: [] });
   const [searchQuery, setSearchQuery] = useState("");
   const [collegeProducts, setCollegeProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
+  const backendURL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:8000"
+      : "https://relayy-backend-9war.onrender.com";
+
   useEffect(() => {
-    // Try to read stored user first
-    const storedUser = (() => {
+    const loadUserAndProducts = async () => {
       try {
-        return JSON.parse(localStorage.getItem("user"));
-      } catch (e) {
-        return null;
+        setLoading(true);
+
+        // 1️⃣ Get user email
+        let email = null;
+        try {
+          const storedUser = JSON.parse(localStorage.getItem("user"));
+          if (storedUser?.email) email = storedUser.email;
+        } catch {}
+        if (!email) {
+          const token = localStorage.getItem("token");
+          if (token) {
+            const payload = decodeJwtPayload(token);
+            if (payload?.email) email = payload.email;
+          }
+        }
+        if (!email) email = localStorage.getItem("userEmail");
+
+        if (!email) {
+          setLoading(false);
+          return;
+        }
+
+        // 2️⃣ Fetch user details (for college name)
+        const userRes = await axios.get(`${backendURL}/api/v1/users/${email}`);
+        const userData = userRes.data || {};
+        const collegeName = userData.college || "Your College";
+
+        const userObj = { ...userData, email, college: collegeName };
+        setUser(userObj);
+
+        // 3️⃣ Fetch all products
+        const productRes = await axios.get(`${backendURL}/api/v1/products`);
+        const allProducts = Array.isArray(productRes.data)
+          ? productRes.data
+          : productRes.data.products || [];
+
+        // 4️⃣ Filter by college domain
+        const domain = email.split("@")[1].toLowerCase();
+        const sameCollege = allProducts.filter(
+          (p) =>
+            p.userEmail &&
+            p.userEmail.split("@")[1]?.toLowerCase() === domain
+        );
+
+        setCollegeProducts(sameCollege);
+      } catch (err) {
+        console.error("Error loading user or products:", err);
+      } finally {
+        setLoading(false);
       }
-    })();
+    };
 
-    if (storedUser && storedUser.email) {
-      setUser(storedUser);
-      filterByCollege(storedUser.email);
-      return;
-    }
+    loadUserAndProducts();
+  }, [backendURL]);
 
-    // If no stored user, try to decode token for email
-    const token = localStorage.getItem("token");
-    if (token) {
-      const payload = decodeJwtPayload(token);
-      if (payload && payload.email) {
-        const tokenUser = { email: payload.email, username: payload.username || "" };
-        setUser(tokenUser);
-        // store for future quick reads
-        localStorage.setItem("user", JSON.stringify(tokenUser));
-        localStorage.setItem("userEmail", payload.email);
-        filterByCollege(payload.email);
-        return;
-      }
-    }
-
-    // As a last fallback, see if userEmail exists separately
-    const storedEmail = localStorage.getItem("userEmail");
-    if (storedEmail) {
-      const fallbackUser = { email: storedEmail };
-      setUser(fallbackUser);
-      filterByCollege(storedEmail);
-      return;
-    }
-
-    // No auth info -> redirect to register (or show message)
-    setLoading(false);
-    // optionally redirect:
-    // navigate("/register");
-  }, [navigate]);
-
-  const filterByCollege = (email) => {
-    setLoading(true);
-    const domain = email.split("@")[1];
-    // use p.userEmail (your object property)
-    const filteredByCollege = products.filter((p) => {
-      // guard against missing userEmail
-      if (!p.userEmail) return false;
-      return p.userEmail.split("@")[1] === domain;
-    });
-    // small delay to show loader briefly
-    setTimeout(() => {
-      setCollegeProducts(filteredByCollege);
-      setLoading(false);
-    }, 300);
-  };
-
-  const applyFilters = () => {
-    return collegeProducts.filter((p) => {
-      if (searchQuery && !p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  const applyFilters = () =>
+    collegeProducts.filter((p) => {
+      const title = (p.title || p.name || "").toLowerCase();
+      if (searchQuery && !title.includes(searchQuery.toLowerCase())) return false;
+      if (filters.categories?.length && !filters.categories.includes(p.category))
         return false;
-      if (filters.categories.length && !filters.categories.includes(p.category))
+      if (
+        filters.ratings?.length &&
+        !filters.ratings.includes(Math.round(p.rating || 0))
+      )
         return false;
-      if (filters.ratings.length && !filters.ratings.includes(p.rating)) return false;
       return true;
     });
-  };
 
   const filteredProducts = applyFilters();
 
   const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-    const emptyStars = 5 - Math.ceil(rating);
+    const full = Math.floor(rating || 0);
+    const hasHalf = (rating || 0) % 1 !== 0;
+    const empty = 5 - Math.ceil(rating || 0);
     return (
       <div className="flex text-yellow-500 text-lg">
-        {"★".repeat(fullStars)}
-        {hasHalfStar && "☆"}
-        {"☆".repeat(emptyStars)}
+        {"★".repeat(full)}
+        {hasHalf && "☆"}
+        {"☆".repeat(empty)}
       </div>
     );
   };
-
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="loader"></div>
+        <div className="loader" />
       </div>
     );
 
   return (
-    <div id="/home" className="font-poppins">
+    <div id="/home" className="font-poppins min-h-screen bg-gray-50">
       <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-     <Header title={user?.college ? `${user.college}` : "Your College Listings"} />
+      <Header
+        title={
+          user?.college
+            ? `${user.college}`
+            : "Your College Listings"
+        }
+      />
 
-      <div className="min-h-screen flex bg-gray-50">
+      <div className="flex">
         <Sidebar filters={filters} setFilters={setFilters} />
 
         <main className="flex-1 p-8">
-
           {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
               {filteredProducts.map((product) => (
                 <div
-                  key={product.id}
+                  key={product._id}
                   className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 overflow-hidden cursor-pointer"
-                  onClick={() => navigate(`/product/${product.id}`)}
+                  onClick={() => navigate(`/product/${product._id}`)}
                 >
                   <div className="relative w-full h-55">
-                    <img src={product.image} alt={product.name} className="object-cover w-full h-full" />
+                    <img
+                      src={
+                        product.imageUrls?.[0] ||
+                        product.image ||
+                        "/placeholder.jpg"
+                      }
+                      alt={product.title || "Product"}
+                      className="object-cover w-full h-full"
+                    />
                   </div>
 
                   <div className="p-4 flex flex-col justify-between h-[160px]">
                     <h3 className="text-lg font-semibold text-gray-800 line-clamp-1 hover:text-purple-700">
-                      {product.name}
+                      {product.title}
                     </h3>
                     <div className="mt-3">
-                      <p className="text-purple-800 font-semibold text-lg">₹{product.price}</p>
+                      <p className="text-purple-800 font-semibold text-lg">
+                        ₹{product.price}
+                      </p>
                       <div className="mt-1">{renderStars(product.rating)}</div>
-                      <p className="text-xs text-gray-400 mt-2">Listed by: {product.username || product.name} ({product.userEmail})</p>
+                      <p className="text-xs text-gray-400 mt-2">
+                        Listed by: {product.username || "Unknown"} (
+                        {product.userEmail})
+                      </p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-lg text-center mt-12">No listings found for your campus yet.</p>
+            <p className="text-gray-500 text-lg text-center mt-12">
+              No listings found for your campus yet.
+            </p>
           )}
         </main>
       </div>

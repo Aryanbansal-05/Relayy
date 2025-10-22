@@ -10,7 +10,7 @@ const AuthWrapper = ({ children }) => {
     const verifySession = async () => {
       try {
         const res = await axios.get(
-         "https://relayy-backend-9war.onrender.com/api/v1/users/verify",
+         "http://localhost:8000/api/v1/users/verify",
           { withCredentials: true }
         );
         if (res.status === 200) {

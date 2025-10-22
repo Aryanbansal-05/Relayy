@@ -16,9 +16,11 @@ import AutoRedirect from "./components/AutoRedirect"; // ✅ separate file (from
 import axios from "axios";
 import Profile_page from "./Profile/Profile_page";
 import Seller_page from "./Profile/Seller_page";
+import EditProduct from "./Profile/EditProduct";
+import Myproduct_page from "./Profile/Myproduct_page";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com";
+axios.defaults.baseURL = "http://localhost:8000/api/v1";
 
 function App() {
   return (
@@ -73,7 +75,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/profile"
             element={
               <ProtectedRoute>
@@ -81,7 +83,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/sell"
             element={
               <ProtectedRoute>
@@ -89,7 +91,26 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+          path="/Myproduct/:id"
+          element={
+            <ProtectedRoute>
+              <Myproduct_page />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditProduct />
+            </ProtectedRoute>
+          }
+        />
         </Routes>
+        
+
       </BrowserRouter>
       <Footer />
     </ReactLenis>

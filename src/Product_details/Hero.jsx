@@ -1,44 +1,19 @@
-// src/components/Hero.jsx
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
-import {
-  Box,
-  Button,
-  IconButton,
-  Rating,
-  Card,
-  CardMedia,
-  Stack,
-} from "@mui/material";
+// src/Product_details/Hero.jsx
+import React, { useEffect, useState } from "react";
+import { Box, Button, IconButton, Rating, Card, CardMedia, Stack } from "@mui/material";
 import { FavoriteBorder } from "@mui/icons-material";
-import products from "../data/products";
-import Related from "./Related";
 
-export default function Hero() {
-  const { id } = useParams();
-  const [product, setProduct] = useState(null);
+export default function Hero({ product }) {
   const [images, setImages] = useState([]);
   const [mainImage, setMainImage] = useState("");
 
- useEffect(() => {
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, 100); // small delay ensures it runs after image rendering
-}, [id]);
-
   useEffect(() => {
-    const foundProduct = products.find((p) => p.id === Number(id));
-    if (foundProduct) {
-      setProduct(foundProduct);
-      const productImages = [
-        foundProduct.image,
-        foundProduct.image,
-        foundProduct.image,
-      ];
-      setMainImage(productImages[0]);
-      setImages(productImages.slice(1));
+    if (product?.imageUrls) {
+      setMainImage(product.imageUrls[0]);
+      setImages(product.imageUrls.slice(1));
     }
-  }, [id]);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
+  }, [product]);
 
   if (!product) return <p>Loading...</p>;
 
@@ -86,6 +61,7 @@ export default function Hero() {
             alignItems: "center",
           }}
         >
+          {/* Small Thumbnails */}
           <Stack spacing={2} sx={{ width: "20%", minWidth: 100 }}>
             {images.map((src, index) => (
               <CardMedia
@@ -106,6 +82,7 @@ export default function Hero() {
             ))}
           </Stack>
 
+          {/* Main Image */}
           <Box
             sx={{
               flex: 1,
@@ -116,7 +93,7 @@ export default function Hero() {
           >
             <CardMedia
               component="img"
-              image={mainImage}
+              image={mainImage || "/placeholder.jpg"}
               alt="main product"
               sx={{
                 borderRadius: 3,
@@ -145,11 +122,11 @@ export default function Hero() {
               fontWeight: "700",
             }}
           >
-            {product.name}
+            {product.title}
           </h1>
 
           <Box display="flex" alignItems="center" mb={2}>
-            <Rating name="read-only" value={product.rating} readOnly size="medium" />
+            <Rating name="read-only" value={4} readOnly size="medium" />
           </Box>
 
           <h2
@@ -160,7 +137,7 @@ export default function Hero() {
               fontWeight: "600",
             }}
           >
-            ₹{product.price.toFixed(2)}
+            ₹{product.price}
           </h2>
 
           <Box display="flex" alignItems="center" gap={2} mb={3}>
@@ -173,24 +150,10 @@ export default function Hero() {
                 py: 1.8,
                 textTransform: "none",
                 fontSize: "1.1rem",
-                fontFamily: "inherit",
               }}
+              onClick={() => (window.location.href = `mailto:${product.userEmail}`)}
             >
-              Chat Now
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                borderRadius: "10px",
-                px: 4,
-                py: 1.8,
-                textTransform: "none",
-                fontSize: "1.1rem",
-                fontFamily: "inherit",
-              }}
-            >
-              Enquire
+              Contact Seller
             </Button>
             <IconButton sx={{ border: "1px solid #ccc" }}>
               <FavoriteBorder />

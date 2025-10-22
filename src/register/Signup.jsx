@@ -13,10 +13,20 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-   const backendURL =
+
+  const backendURL =
     window.location.hostname === "localhost"
       ? "http://localhost:8000"
       : "https://relayy-backend-9war.onrender.com";
+
+  // Predefined college list
+  const collegeOptions = [
+    "Thapar University",
+    "Manipal University Jaipur",
+    "NIT Jalandhar",
+    "IIT Ropar",
+  ];
+
   const handleSignup = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) return alert("Passwords do not match");
@@ -49,21 +59,86 @@ function Signup() {
           <div className="loader"></div>
         </div>
       )}
+
       <Header title="Signup" />
       <div className="flex justify-center items-center py-10 bg-white">
         <div className="w-full max-w-4xl bg-white shadow-md rounded-lg grid md:grid-cols-2 overflow-hidden">
+          {/* Left Section (Form) */}
           <div className="p-8">
             <h3 className="text-2xl font-bold mb-3">Signup</h3>
             <form className="space-y-4" onSubmit={handleSignup}>
-              <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required className="w-full border border-gray-300 rounded-md px-3 py-2" />
-              <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full border border-gray-300 rounded-md px-3 py-2" />
-              <input type="text" placeholder="College" value={college} onChange={(e) => setCollege(e.target.value)} required className="w-full border border-gray-300 rounded-md px-3 py-2" />
-              <input type="text" placeholder="Hostel" value={hostel} onChange={(e) => setHostel(e.target.value)} required className="w-full border border-gray-300 rounded-md px-3 py-2" />
-              <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full border border-gray-300 rounded-md px-3 py-2" />
-              <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className="w-full border border-gray-300 rounded-md px-3 py-2" />
-              <button type="submit" className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800">Create Account</button>
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+              />
+
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+              />
+
+              {/* ✅ College Dropdown */}
+              <select
+                value={college}
+                onChange={(e) => setCollege(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-700"
+              >
+                <option value="" disabled>
+                  Select your College
+                </option>
+                {collegeOptions.map((col, index) => (
+                  <option key={index} value={col}>
+                    {col}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="text"
+                placeholder="Hostel"
+                value={hostel}
+                onChange={(e) => setHostel(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+              />
+
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+              />
+
+              <button
+                type="submit"
+                className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800"
+              >
+                {isLoading ? "Creating Account..." : "Create Account"}
+              </button>
             </form>
           </div>
+
+          {/* Right Section */}
           <div className="hidden md:block bg-gray-300"></div>
         </div>
       </div>

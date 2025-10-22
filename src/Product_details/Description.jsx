@@ -23,7 +23,7 @@ const Description = ({ product }) => {
               fontFamily: "inherit",
             }}
           >
-            {product?.name}
+            {product?.title}
           </h3>
           <p
             style={{
