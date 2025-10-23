@@ -30,11 +30,19 @@ function Login() {
 
       navigate("/home");
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      alert(err.response?.data?.message || "Login failed");
-    } finally {
-      setIsLoading(false);
-    }
+  console.error("Login error:", err);
+
+  const backendMessage =
+    err.response?.data?.message ||
+    err.response?.data?.error ||
+    err.response?.data ||
+    err.message;
+
+  alert(`Login failed: ${backendMessage}`);
+} finally {
+  setIsLoading(false);
+}
+
   };
 
   return (

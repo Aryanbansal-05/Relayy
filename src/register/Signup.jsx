@@ -45,11 +45,18 @@ function Signup() {
 
       navigate("/home");
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      alert(err.response?.data?.message || "Signup failed");
-    } finally {
-      setIsLoading(false);
-    }
+      console.error("Signup error:", err);
+
+  const backendMessage =
+    err.response?.data?.message ||
+    err.response?.data?.error ||
+    err.response?.data ||
+    err.message;
+
+  alert(`Signup failed: ${backendMessage}`);
+} finally {
+  setIsLoading(false);
+}
   };
 
   return (
