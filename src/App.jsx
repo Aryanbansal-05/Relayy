@@ -12,13 +12,15 @@ import Forgot from "./Forgot";
 import Login from "./register/Login";
 import Signup from "./register/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AutoRedirect from "./components/AutoRedirect"; // ✅ separate file (from above)
+import AutoRedirect from "./components/AutoRedirect"; 
 import axios from "axios";
 import Profile_page from "./Profile/Profile_page";
 import Seller_page from "./Profile/Seller_page";
 import EditProduct from "./Profile/EditProduct";
 import Myproduct_page from "./Profile/Myproduct_page";
-import { HelmetProvider } from "react-helmet-async"; 
+import { HelmetProvider } from "react-helmet-async";
+import AllProductsPage from "./all-products/AllProductsPage"; 
+import HostelStores from "./home/HostelStores"; 
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com/api/v1";
@@ -109,6 +111,34 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+            path="/all-products" // For the "All Products" page
+            element={
+              <ProtectedRoute>
+                <AllProductsPage />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/hostels" // For the "Browse by Hostel" page
+            element={
+              <ProtectedRoute>
+                <HostelStores />
+              </ProtectedRoute>
+            }
+          />
+
+          
+          {/* <Route
+            path="/hostel/:hostelName" 
+            element={
+              <ProtectedRoute>
+                <HostelProducts_page /> 
+              </ProtectedRoute>
+            }
+          />  */}
         </Routes>
         
 

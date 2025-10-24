@@ -1,6 +1,5 @@
 import React from 'react';
-import Navbar from '../Navbar'; // Adjust path if needed
-import Footer from '../components/Footer'; // Adjust path if needed
+import Navbar from '../Navbar'; 
 import { useNavigate } from 'react-router-dom';
 
 // --- Static Hostel Data ---

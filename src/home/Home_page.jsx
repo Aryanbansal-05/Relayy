@@ -99,6 +99,7 @@ const Home = () => {
         // 2️⃣ Fetch user details
         const userRes = await axios.get(`${backendURL}/api/v1/users/${email}`);
         setUser(userRes.data || null);
+        console.log("USER DATA FROM API:", userRes.data);
 
         // 3️⃣ Fetch all products
         const productRes = await axios.get(`${backendURL}/api/v1/products`);
@@ -168,7 +169,7 @@ const Home = () => {
       <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
       <main>
-        <Hero />
+        <Hero user={user} />
         <Categories 
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory} 
