@@ -18,6 +18,7 @@ import Profile_page from "./Profile/Profile_page";
 import Seller_page from "./Profile/Seller_page";
 import EditProduct from "./Profile/EditProduct";
 import Myproduct_page from "./Profile/Myproduct_page";
+import { HelmetProvider } from "react-helmet-async"; 
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com/api/v1";

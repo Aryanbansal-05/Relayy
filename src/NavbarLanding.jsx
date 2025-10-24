@@ -42,7 +42,7 @@ function NavbarLanding() {
       {/* Action Buttons (Desktop) & Mobile Toggle */}
       <div className="flex items-center space-x-3">
         {/* Desktop Buttons */}
-        <div className="hidden md:flex space-x-3">
+        {/* <div className="hidden md:flex space-x-3">
           <button
             onClick={() => handleNavigate("/login")}
             className="px-5 py-2 border-2 border-emerald-700 rounded-full text-emerald-700 font-semibold hover:bg-emerald-700 hover:text-white transition"
@@ -55,7 +55,7 @@ function NavbarLanding() {
           >
             Sign Up
           </button>
-        </div>
+        </div> */}
 
         {/* Mobile Menu Toggle Button */}
         <button
@@ -99,7 +99,7 @@ function NavbarLanding() {
               Support
             </a>
             <hr className="border-emerald-200" />
-            <div className="flex flex-col space-y-3">
+            {/* <div className="flex flex-col space-y-3">
               <button
                 onClick={() => handleNavigate("/login")}
                 className="px-5 py-2 border-2 border-emerald-700 rounded-full text-emerald-700 font-semibold hover:bg-emerald-700 hover:text-white transition"
@@ -112,7 +112,7 @@ function NavbarLanding() {
               >
                 Sign Up
               </button>
-            </div>
+            </div> */}
           </nav>
         </div>
       )}
