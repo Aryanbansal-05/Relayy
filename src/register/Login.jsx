@@ -88,7 +88,7 @@ function Login() {
               {/* FORM */}
               <form onSubmit={handleLogin} className="flex flex-col gap-4 py-6">
                 <label className="flex flex-col">
-                  <p className="text-base font-medium pb-2">Email</p>
+                  <p className="text-base font-medium pb-2">Username</p>
                   <input
                     type="username"
                     value={username}
