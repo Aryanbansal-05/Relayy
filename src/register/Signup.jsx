@@ -15,10 +15,8 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const backendURL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:8000"
-      : "https://relayy-backend-9war.onrender.com";
+const backendURL = "https://relayy-backend-9war.onrender.com";
+
 
   const collegeOptions = [
     "Thapar University",

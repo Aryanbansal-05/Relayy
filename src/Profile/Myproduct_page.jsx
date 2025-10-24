@@ -8,10 +8,8 @@ const Myproduct_page = () => {
   const [product, setProduct] = useState(null);
   const navigate = useNavigate();
 
-  const backendURL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:8000"
-      : "https://relayy-backend-9war.onrender.com";
+const backendURL = "https://relayy-backend-9war.onrender.com";
+
 
   useEffect(() => {
     const fetchProduct = async () => {

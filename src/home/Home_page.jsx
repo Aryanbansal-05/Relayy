@@ -30,10 +30,7 @@ const Home_page = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
-  const backendURL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:8000"
-      : "https://relayy-backend-9war.onrender.com";
+  const backendURL = "https://relayy-backend-9war.onrender.com";
 
   useEffect(() => {
     const loadUserAndProducts = async () => {

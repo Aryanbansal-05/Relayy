@@ -11,10 +11,8 @@ const Hero = () => {
     const navigate = useNavigate();
 
     // ✅ Backend URL auto-switch
-    const backendURL =
-        window.location.hostname === "localhost"
-            ? "http://localhost:8000"
-            : "https://relayy-backend-9war.onrender.com";
+  const backendURL = "https://relayy-backend-9war.onrender.com";
+
 
     // ✅ Fetch user data
     useEffect(() => {

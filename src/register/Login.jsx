@@ -11,36 +11,38 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const backendURL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:8000"
-      : "https://relayy-backend-9war.onrender.com";
+  const backendURL = "https://relayy-backend-9war.onrender.com";
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const res = await axios.post(
-        `${backendURL}/api/v1/users/login`,
-        { username, password },
-        { withCredentials: true }
-      );
+  e.preventDefault();
+  setIsLoading(true);
 
-      const { user, token } = res.data;
-      if (token) Cookies.set("auth_token", token, { expires: 1 / 24 });
-      if (user) localStorage.setItem("user", JSON.stringify(user));
-      navigate("/home");
-    } catch (err) {
-      const backendMessage =
-        err.response?.data?.message ||
-        err.response?.data?.error ||
-        err.response?.data ||
-        err.message;
-      alert(`Login failed: ${backendMessage}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  try {
+    const res = await axios.post(
+      `${backendURL}/api/v1/users/login`,
+      { username, password },
+      { withCredentials: true }
+    );
+
+    const { user, token } = res.data || {};
+
+    // Optional: Only set cookie if backend doesn't issue HttpOnly cookie
+    if (token) Cookies.set("auth_token", token, { expires: 1 / 24, sameSite: "Strict" });
+    if (user) localStorage.setItem("user", JSON.stringify(user));
+
+    navigate("/home");
+  } catch (err) {
+    const backendMessage =
+      err.response?.data?.message ||
+      err.response?.data?.error ||
+      err.response?.data ||
+      err.message;
+    console.error("Login failed:", backendMessage);
+    alert(`Login failed: ${backendMessage}`);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     
