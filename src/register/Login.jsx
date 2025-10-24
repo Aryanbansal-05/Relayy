@@ -55,7 +55,7 @@ function Login() {
       <main className="layout-container flex h-full grow flex-col">
         <div className="flex flex-1 flex-wrap">
           {/* LEFT SECTION */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-12 order-2 lg:order-1"
+          <div className="w-full lg:w-1/2 flex items-start justify-center p-8 lg:p-12 order-2 lg:order-1"
             style={{
               background: "linear-gradient(to bottom right, #D1FAE5, #FFFFFF, #A7F3D0)"
             }}
