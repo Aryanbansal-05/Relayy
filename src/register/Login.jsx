@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ function Login() {
     try {
       const res = await axios.post(
         `${backendURL}/api/v1/users/login`,
-        { email, password },
+        { username, password },
         { withCredentials: true }
       );
 
@@ -43,7 +43,7 @@ function Login() {
 
   return (
     <div className="font-josefin min-h-screen flex flex-col bg-white">
-      <Header title="Login" />
+      {/* <Header title="Login" /> */}
 
       {isLoading && (
         <div className="fixed inset-0 bg-white/80 flex justify-center items-center z-50">
@@ -87,11 +87,11 @@ function Login() {
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">Email</p>
                   <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     className="rounded-xl h-14 p-4 bg-emerald-100/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
-                    placeholder="Enter your email"
+                    placeholder="Enter your username"
                     required
                   />
                 </label>

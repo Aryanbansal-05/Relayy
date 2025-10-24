@@ -58,7 +58,7 @@ function Signup() {
 
   return (
     <div className="font-josefin min-h-screen flex flex-col bg-white">
-      <Header title="Signup" />
+      {/* <Header title="Signup" /> */}
 
       {isLoading && (
         <div className="fixed inset-0 bg-white/80 flex justify-center items-center z-50">
