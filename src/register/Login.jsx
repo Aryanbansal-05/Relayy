@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Header from "../components/Header";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
+import NavbarLanding from "../NavbarLanding";
+
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -42,19 +43,23 @@ function Login() {
   };
 
   return (
+    
     <div className="font-josefin min-h-screen flex flex-col bg-white">
-      {/* <Header title="Login" /> */}
-
+    <NavbarLanding />
       {isLoading && (
         <div className="fixed inset-0 bg-white/80 flex justify-center items-center z-50">
-          <div className="loader border-4 border-emerald-600 border-t-transparent rounded-full w-10 h-10 animate-spin"></div>
+          <div className="loader border-4 border-emerald-700 border-t-transparent rounded-full w-10 h-10 animate-spin"></div>
         </div>
       )}
 
       <main className="layout-container flex h-full grow flex-col">
         <div className="flex flex-1 flex-wrap">
           {/* LEFT SECTION */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-12 order-2 lg:order-1 bg-gradient-to-br from-green-50/50 via-white to-green-50/50">
+          <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-12 order-2 lg:order-1"
+            style={{
+              background: "linear-gradient(to bottom right, #D1FAE5, #FFFFFF, #A7F3D0)"
+            }}
+          >
             <div className="layout-content-container flex flex-col max-w-[480px] w-full">
               <div className="flex flex-col gap-3 pb-8 text-center lg:text-left">
                 <p className="text-4xl font-black leading-tight tracking-tight text-gray-900">
@@ -67,10 +72,8 @@ function Login() {
 
               {/* Tabs */}
               <div className="pb-3">
-                <div className="flex border-b border-emerald-200 gap-8">
-                  <button
-                    className="flex-1 py-4 border-b-[3px] border-b-emerald-600 text-emerald-700 font-bold"
-                  >
+                <div className="flex border-b border-emerald-300 gap-8">
+                  <button className="flex-1 py-4 border-b-[3px] border-b-emerald-700 text-emerald-700 font-bold">
                     Login
                   </button>
                   <button
@@ -90,7 +93,7 @@ function Login() {
                     type="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
+                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
                     placeholder="Enter your username"
                     required
                   />
@@ -102,7 +105,7 @@ function Login() {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100/50 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
+                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
                     placeholder="Enter your password"
                     required
                   />
@@ -116,12 +119,10 @@ function Login() {
 
                 <button
                   type="submit"
-                  className="gradient-button flex items-center justify-center h-12 rounded-xl text-white text-base font-bold bg-gradient-to-r from-emerald-600 to-emerald-400 hover:opacity-90 transition"
+                  className="gradient-button flex items-center justify-center h-12 rounded-xl text-white text-base font-bold bg-gradient-to-r from-emerald-700 to-emerald-600 hover:opacity-90 transition"
                 >
                   Login
                 </button>
-
-                
 
                 <p className="text-sm text-emerald-700 text-center pt-6">
                   By continuing, you agree to our{" "}
