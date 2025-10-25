@@ -1,6 +1,6 @@
 import React from 'react';
-import './LandingPage.css';
-import { useNavigate } from 'react-router-dom';
+import './Landingpage.css';
+import { useNavigate } from 'react-router';
 
 import HeroSection from './Hero';
 import JourneySection from './Journey';
