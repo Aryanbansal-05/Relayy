@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import './LandingPage.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,7 +6,7 @@ import HeroSection from './Hero';
 import JourneySection from './Journey';
 import ThreadSection from './Thread';
 import CampusSection from './Campus';
-
+ 
 const RelayyLandingPage = () => {
     const navigate = useNavigate();
   return (
