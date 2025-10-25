@@ -69,17 +69,7 @@ const Myproduct_page = () => {
 
     return (
         <div className="bg-emerald-50 min-h-screen relative overflow-hidden font-sans">
-            {/* Subtle Background Pattern */}
-            <div className="absolute inset-0 z-0 opacity-40">
-                <svg className="absolute top-0 left-0 w-full h-full text-emerald-200" fill="none" viewBox="0 0 200 200">
-                    <defs>
-                        <pattern id="dot-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                            <circle cx="2" cy="2" r="1" fill="currentColor" />
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#dot-pattern)" />
-                </svg>
-            </div>
+            
 
             <div className="relative z-10">
                 <Navbar />

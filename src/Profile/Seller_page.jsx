@@ -1,215 +1,255 @@
-// src/pages/SellerPage.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "../Navbar";
-import { X } from "lucide-react"; // icon for removing images
+import { Loader2, PlusCircle, UploadCloud, X } from "lucide-react"; // Updated icons
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 const SellerPage = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  // form state
-  const [formData, setFormData] = useState({
-    title: "",
-    price: "",
-    category: "",
-    description: "",
-    images: [],
-  });
-  const [preview, setPreview] = useState([]);
-  const [loading, setLoading] = useState(false);
+    // form state
+    const [formData, setFormData] = useState({
+        title: "",
+        price: "",
+        category: "",
+        description: "",
+        images: [],
+    });
+    const [preview, setPreview] = useState([]);
+    const [loading, setLoading] = useState(false); // Changed to isSubmitting for clarity
 
-const backendURL = "https://relayy-backend-9war.onrender.com";
+    const backendURL = "https://relayy-backend-9war.onrender.com";
+
+    /* ------------------------- handle input changes ------------------------- */
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    /* ------------------------- handle image selection ------------------------ */
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files);
+        const currentImageCount = formData.images.length;
+        const remainingSlots = 4 - currentImageCount;
+        const filesToAdd = files.slice(0, remainingSlots); // Only take up to 4 total
+
+        if (filesToAdd.length > 0) {
+            const allImages = [...formData.images, ...filesToAdd];
+            setFormData((prev) => ({ ...prev, images: allImages }));
+
+            const imagePreviews = allImages.map((file) => {
+                // If it's already an object URL, keep it, otherwise create one
+                return typeof file === 'string' ? file : URL.createObjectURL(file);
+            });
+            setPreview(imagePreviews);
+        }
+        
+        if (files.length > remainingSlots) {
+            alert(`You can only upload a maximum of 4 images. ${remainingSlots} slots were remaining.`);
+        }
+    };
 
 
-  /* ------------------------- handle input changes ------------------------- */
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    /* ------------------------- remove selected image ------------------------- */
+    const removeImage = (index) => {
+        // Revoke the object URL to free up memory
+        const objectUrl = preview[index];
+        if (objectUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(objectUrl);
+        }
+        
+        const newImages = formData.images.filter((_, i) => i !== index);
+        const newPreviews = preview.filter((_, i) => i !== index);
+        setFormData((prev) => ({ ...prev, images: newImages }));
+        setPreview(newPreviews);
+    };
 
-  /* ------------------------- handle image selection ------------------------ */
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    const allImages = [...formData.images, ...files].slice(0, 4); // limit 4
-    setFormData((prev) => ({ ...prev, images: allImages }));
+    /* --------------------------- handle submit ------------------------------- */
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!formData.title || !formData.price || !formData.category) {
+            return alert("Please fill all required fields (Title, Price, Category)");
+        }
 
-    const imagePreviews = allImages.map((file) => URL.createObjectURL(file));
-    setPreview(imagePreviews);
-  };
+        if (formData.images.length === 0) {
+            return alert("Please upload at least one image");
+        }
 
-  /* ------------------------- remove selected image ------------------------- */
-  const removeImage = (index) => {
-    const newImages = formData.images.filter((_, i) => i !== index);
-    const newPreviews = preview.filter((_, i) => i !== index);
-    setFormData((prev) => ({ ...prev, images: newImages }));
-    setPreview(newPreviews);
-  };
+        setLoading(true);
 
-  /* --------------------------- handle submit ------------------------------- */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.title || !formData.price || !formData.category) {
-      return alert("Please fill all required fields");
-    }
+        try {
+            const data = new FormData();
+            Object.keys(formData).forEach((key) => {
+                if (key !== "images") data.append(key, formData[key]);
+            });
+            formData.images.forEach((img) => data.append("images", img));
 
-    if (formData.images.length === 0) {
-      return alert("Please upload at least one image");
-    }
+            const token =
+                Cookies.get("auth_token") || localStorage.getItem("token") || "";
 
-    setLoading(true);
+            await axios.post(`${backendURL}/api/v1/products`, data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true,
+            });
 
-    try {
-      const data = new FormData();
-      Object.keys(formData).forEach((key) => {
-        if (key !== "images") data.append(key, formData[key]);
-      });
-      formData.images.forEach((img) => data.append("images", img));
+            alert("✅ Product listed successfully!");
+            navigate("/profile"); // redirect to seller profile or home
+        } catch (err) {
+            console.error("❌ Upload error:", err.response?.data || err.message);
+            alert(err.response?.data?.message || "Failed to list product");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-      const token =
-        Cookies.get("auth_token") || localStorage.getItem("token") || "";
+    return (
+        <div className="bg-emerald-50 min-h-screen relative overflow-hidden font-sans">
+            
 
-      const res = await axios.post(`${backendURL}/api/v1/products`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      });
+            <div className="relative z-10">
+                <Navbar />
+                
+                {/* Main Content Card */}
+                <main className="max-w-3xl mx-auto my-8 p-6 sm:p-8 bg-white rounded-2xl shadow-xl">
+                    <h2 className="text-3xl font-extrabold text-gray-900 mb-6 flex items-center">
+                        <PlusCircle className="w-8 h-8 mr-3 text-emerald-600"/> {/* Added Icon */}
+                        List Your Item
+                    </h2>
 
-      alert("✅ Product listed successfully!");
-      navigate("/profile"); // redirect to seller profile or home
-    } catch (err) {
-      console.error("❌ Upload error:", err.response?.data || err.message);
-      alert(err.response?.data?.message || "Failed to list product");
-    } finally {
-      setLoading(false);
-    }
-  };
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Title */}
+                        <div>
+                            <label htmlFor="title" className="block text-sm font-bold text-gray-700 mb-2">Title <span className="text-red-500">*</span></label>
+                            <input
+                                id="title"
+                                name="title"
+                                type="text"
+                                placeholder="e.g., 'Vintage Denim Jacket'"
+                                value={formData.title}
+                                onChange={handleChange}
+                                required
+                                className="w-full border-2 border-emerald-100 bg-emerald-50 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                            />
+                        </div>
 
-  return (
-    <div className="font-josefin bg-gray-50 min-h-screen">
-      <Navbar />
-      <div className="max-w-3xl mx-auto py-10 px-6">
-        <h2 className="text-2xl font-semibold text-purple-800 mb-6">
-          🛍️ List Your Product
-        </h2>
+                        {/* Price */}
+                        <div>
+                            <label htmlFor="price" className="block text-sm font-bold text-gray-700 mb-2">Price (₹) <span className="text-red-500">*</span></label>
+                            <input
+                                id="price"
+                                name="price"
+                                type="number"
+                                placeholder="e.g., 999"
+                                value={formData.price}
+                                onChange={handleChange}
+                                required
+                                min="1" // Ensure positive price
+                                className="w-full border-2 border-emerald-100 bg-emerald-50 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                            />
+                        </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white shadow-md rounded-lg p-6 space-y-4"
-        >
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Title <span className="text-red-500">*</span>
-            </label>
-            <input
-              name="title"
-              placeholder="Enter product title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
-            />
-          </div>
+                        {/* Category */}
+                        <div>
+                            <label htmlFor="category" className="block text-sm font-bold text-gray-700 mb-2">Category <span className="text-red-500">*</span></label>
+                            <select
+                                id="category"
+                                name="category"
+                                value={formData.category}
+                                onChange={handleChange}
+                                required
+                                className="w-full border-2 border-emerald-100 bg-emerald-50 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white appearance-none" // Added appearance-none
+                            >
+                                <option value="" disabled>Select category</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Books">Books</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Furniture">Furniture</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Price (₹) <span className="text-red-500">*</span>
-            </label>
-            <input
-              name="price"
-              type="number"
-              placeholder="Enter product price"
-              value={formData.price}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
-            />
-          </div>
+                        {/* Description */}
+                        <div>
+                            <label htmlFor="description" className="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                            <textarea
+                                id="description"
+                                name="description"
+                                rows="4"
+                                placeholder="Describe your item..."
+                                value={formData.description}
+                                onChange={handleChange}
+                                className="w-full border-2 border-emerald-100 bg-emerald-50 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                            />
+                        </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Category <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 bg-white"
-            >
-              <option value="">Select category</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Books">Books</option>
-              <option value="Clothing">Clothing</option>
-              <option value="Furniture">Furniture</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
+                        {/* Custom File Input */}
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Images (Max 4) <span className="text-red-500">*</span></label>
+                            <label
+                                htmlFor="images"
+                                className="flex flex-col items-center justify-center w-full h-48 border-2 border-emerald-200 border-dashed rounded-lg cursor-pointer bg-emerald-50 hover:bg-emerald-100 transition"
+                            >
+                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <UploadCloud className="w-10 h-10 mb-3 text-emerald-500" />
+                                    <p className="mb-2 text-sm text-emerald-700"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p className="text-xs text-gray-500">PNG, JPG, or GIF (max 5MB)</p>
+                                </div>
+                                <input id="images" type="file" multiple accept="image/*" onChange={handleImageChange} className="hidden" />
+                            </label>
+                        </div>
+                        
+                        {/* Image Previews */}
+                        {preview.length > 0 && (
+                            <div>
+                                <h3 className="text-sm font-bold text-gray-700 mb-2">Image Previews</h3>
+                                <div className="grid grid-cols-3 md:grid-cols-4 gap-4"> {/* Changed to match max 4 */}
+                                    {preview.map((src, idx) => (
+                                        <div key={idx} className="relative group">
+                                            <img
+                                                src={src}
+                                                alt={`Preview ${idx + 1}`}
+                                                className="h-32 w-full object-cover rounded-lg border-2 border-emerald-100"
+                                            />
+                                            <button 
+                                                type="button"
+                                                onClick={() => removeImage(idx)} // Use existing remove function
+                                                className="absolute top-1 right-1 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 focus:outline-none"
+                                            >
+                                                <X size={14} /> {/* Use X icon */}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Description
-            </label>
-            <textarea
-              name="description"
-              placeholder="Enter product description"
-              value={formData.description}
-              onChange={handleChange}
-              rows="4"
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
-            />
-          </div>
-
-          {/* Upload Images */}
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">
-              Upload Images (max 4)
-            </label>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
-            />
-
-            {preview.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                {preview.map((src, idx) => (
-                  <div
-                    key={idx}
-                    className="relative h-32 w-full border rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src={src}
-                      alt="Preview"
-                      className="object-cover w-full h-full"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(idx)}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-purple-700 text-white py-3 rounded-md hover:bg-purple-800"
-          >
-            {loading ? "Listing..." : "List Product"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+                        {/* Submit Button */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full flex items-center justify-center bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-800 transition shadow-md transform hover:scale-105 disabled:opacity-70"
+                        >
+                            {loading ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                    Listing...
+                                </>
+                            ) : (
+                                <>
+                                    <PlusCircle className="w-5 h-5 mr-2" />
+                                    List Product
+                                </>
+                            )}
+                        </button>
+                    </form>
+                </main>
+            </div>
+        </div>
+    );
 };
 
 export default SellerPage;
