@@ -1,5 +1,5 @@
 import React from 'react';
-import './LandingPage.css';
+import './Landingpage.css';
 import { useNavigate } from 'react-router-dom';
 
 const CampusSection = () => {
