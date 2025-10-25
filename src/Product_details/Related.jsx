@@ -1,18 +1,19 @@
-// src/components/Related.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Related = ({ category, currentProductId }) => {
   const navigate = useNavigate();
+  
+  // --- THIS LOGIC WAS MISSING ---
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-const backendURL = "https://relayy-backend-9war.onrender.com";
-
+  const backendURL = "https://relayy-backend-9war.onrender.com";
 
   useEffect(() => {
     const fetchRelatedProducts = async () => {
+      if (!category) return;
       try {
         setLoading(true);
         const res = await axios.get(`${backendURL}/api/v1/products`);
@@ -20,7 +21,6 @@ const backendURL = "https://relayy-backend-9war.onrender.com";
           ? res.data
           : res.data.products || [];
 
-        // ✅ Filter products by category & exclude current product
         const filtered = allProducts
           .filter(
             (p) =>
@@ -28,7 +28,7 @@ const backendURL = "https://relayy-backend-9war.onrender.com";
               p._id !== currentProductId &&
               p.imageUrls?.length > 0
           )
-          .slice(0, 4); // show up to 4 related products
+          .slice(0, 4);
 
         setRelatedProducts(filtered);
       } catch (err) {
@@ -38,69 +38,56 @@ const backendURL = "https://relayy-backend-9war.onrender.com";
       }
     };
 
-    if (category) fetchRelatedProducts();
+    fetchRelatedProducts();
   }, [category, currentProductId, backendURL]);
 
-  // ✅ Handle navigation + scroll
   const handleProductClick = (productId) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
     navigate(`/product/${productId}`);
   };
+  // --- END OF MISSING LOGIC ---
 
+  // --- LOADING / EMPTY STATES ---
   if (loading)
     return (
-      <div className="text-center text-gray-500 my-10">
-        Loading related products...
+      <div className="max-w-6xl mx-auto px-4">
+        <p className="text-center text-gray-800">Loading related items...</p>
       </div>
     );
 
+  if (relatedProducts.length === 0) {
+    return null; // Don't show the section if there are no related items
+  }
+
+  // --- Main Related Component ---
   return (
-    <section className="mt-12 px-8 mb-5 font-poppins">
-      <h2 className="text-2xl font-semibold text-indigo-900 mb-6">
-        Related Products
+    <section className="max-w-6xl mx-auto px-4 font-sans">
+      <h2 className="text-3xl font-bold text-gray-900 mb-6">
+        You might also like
       </h2>
 
-      {relatedProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {relatedProducts.map((product) => (
-            <div
-              key={product._id}
-              onClick={() => handleProductClick(product._id)}
-              className="bg-white rounded-2xl shadow hover:shadow-lg transition cursor-pointer p-4 border border-gray-100"
-            >
-              <img
-                src={product.imageUrls?.[0] || "/placeholder.jpg"}
-                alt={product.title}
-                className="w-full h-52 object-cover rounded-lg"
-              />
-              <h3 className="text-sm text-indigo-900 mt-3 font-medium line-clamp-1">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {relatedProducts.map((product) => (
+          <div
+            key={product._id}
+            onClick={() => handleProductClick(product._id)}
+            className="bg-gray-50 rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-lg cursor-pointer border border-gray-200"
+          >
+            <img
+              src={product.imageUrls?.[0] || "/placeholder.jpg"}
+              alt={product.title}
+              className="w-full h-36 sm:h-48 object-cover"
+            />
+            <div className="p-3">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900 line-clamp-1">
                 {product.title}
               </h3>
-              <p className="text-purple-700 font-semibold mt-1">
-                ₹{Number(product.price).toFixed(2)}
+              <p className="text-gray-800 text-sm sm:text-base mt-1">
+                ₹{Number(product.price).toFixed(0)}
               </p>
-
-              {/* ⭐ Rating */}
-              <div className="flex items-center mt-1">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <span
-                    key={index}
-                    className={`text-yellow-400 ${
-                      index < Math.round(product.rating || 0)
-                        ? "opacity-100"
-                        : "opacity-30"
-                    }`}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500 text-sm">No related products found.</p>
-      )}
+          </div>
+        ))}
+      </div>
     </section>
   );
 };
