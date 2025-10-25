@@ -17,7 +17,9 @@ const SellerPage = () => {
         images: [],
     });
     const [preview, setPreview] = useState([]);
-    const [loading, setLoading] = useState(false); // Changed to isSubmitting for clarity
+    const [loading, setLoading] = useState(false);
+    // --- New state for drag-and-drop visual feedback ---
+    const [isDragging, setIsDragging] = useState(false);
 
     const backendURL = "https://relayy-backend-9war.onrender.com";
 
@@ -27,9 +29,8 @@ const SellerPage = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    /* ------------------------- handle image selection ------------------------ */
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
+    // --- Unified function to handle files from click OR drop ---
+    const processFiles = (files) => {
         const currentImageCount = formData.images.length;
         const remainingSlots = 4 - currentImageCount;
         const filesToAdd = files.slice(0, remainingSlots); // Only take up to 4 total
@@ -39,7 +40,6 @@ const SellerPage = () => {
             setFormData((prev) => ({ ...prev, images: allImages }));
 
             const imagePreviews = allImages.map((file) => {
-                // If it's already an object URL, keep it, otherwise create one
                 return typeof file === 'string' ? file : URL.createObjectURL(file);
             });
             setPreview(imagePreviews);
@@ -50,6 +50,31 @@ const SellerPage = () => {
         }
     };
 
+    /* ------------------------- handle image selection (click) ---------------- */
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files);
+        processFiles(files);
+        // Reset the input value so the same file can be selected again if removed
+        e.target.value = null; 
+    };
+
+    /* ------------------------- handle drag-and-drop events ------------------- */
+    const handleDragOver = (e) => {
+        e.preventDefault(); // Necessary to allow dropping
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault(); // Prevent browser from opening the file
+        setIsDragging(false);
+        const files = Array.from(e.dataTransfer.files); // Get files from the drop event
+        processFiles(files); // Use the same processing logic
+    };
 
     /* ------------------------- remove selected image ------------------------- */
     const removeImage = (index) => {
@@ -108,15 +133,16 @@ const SellerPage = () => {
 
     return (
         <div className="bg-emerald-50 min-h-screen relative overflow-hidden font-sans">
-            
+            {/* Background pattern removed as requested */}
+            {/* <div className="absolute inset-0 z-0 opacity-40">...</div> */}
 
-            <div className="relative z-10">
+            <div className="relative z-10"> {/* Removed relative z-10 */}
                 <Navbar />
                 
                 {/* Main Content Card */}
                 <main className="max-w-3xl mx-auto my-8 p-6 sm:p-8 bg-white rounded-2xl shadow-xl">
                     <h2 className="text-3xl font-extrabold text-gray-900 mb-6 flex items-center">
-                        <PlusCircle className="w-8 h-8 mr-3 text-emerald-600"/> {/* Added Icon */}
+                        <PlusCircle className="w-8 h-8 mr-3 text-emerald-600"/>
                         List Your Item
                     </h2>
 
@@ -147,7 +173,7 @@ const SellerPage = () => {
                                 value={formData.price}
                                 onChange={handleChange}
                                 required
-                                min="1" // Ensure positive price
+                                min="1"
                                 className="w-full border-2 border-emerald-100 bg-emerald-50 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
                             />
                         </div>
@@ -161,7 +187,7 @@ const SellerPage = () => {
                                 value={formData.category}
                                 onChange={handleChange}
                                 required
-                                className="w-full border-2 border-emerald-100 bg-emerald-50 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white appearance-none" // Added appearance-none
+                                className="w-full border-2 border-emerald-100 bg-emerald-50 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white appearance-none"
                             >
                                 <option value="" disabled>Select category</option>
                                 <option value="Electronics">Electronics</option>
@@ -186,16 +212,21 @@ const SellerPage = () => {
                             />
                         </div>
 
-                        {/* Custom File Input */}
+                        {/* Custom File Input / Dropzone */}
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-2">Images (Max 4) <span className="text-red-500">*</span></label>
                             <label
                                 htmlFor="images"
-                                className="flex flex-col items-center justify-center w-full h-48 border-2 border-emerald-200 border-dashed rounded-lg cursor-pointer bg-emerald-50 hover:bg-emerald-100 transition"
+                                onDragOver={handleDragOver} // <-- Added
+                                onDragLeave={handleDragLeave} // <-- Added
+                                onDrop={handleDrop} // <-- Added
+                                className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer transition-colors
+                                    ${isDragging ? 'border-emerald-500 bg-emerald-100' : 'border-emerald-200 bg-emerald-50 hover:bg-emerald-100'}
+                                `} // <-- Added dynamic styling
                             >
                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <UploadCloud className="w-10 h-10 mb-3 text-emerald-500" />
-                                    <p className="mb-2 text-sm text-emerald-700"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <UploadCloud className={`w-10 h-10 mb-3 ${isDragging ? 'text-emerald-600' : 'text-emerald-500'}`} />
+                                    <p className={`mb-2 text-sm ${isDragging ? 'text-emerald-700' : 'text-emerald-700'}`}><span className="font-semibold">Click to upload</span> or drag and drop</p>
                                     <p className="text-xs text-gray-500">PNG, JPG, or GIF (max 5MB)</p>
                                 </div>
                                 <input id="images" type="file" multiple accept="image/*" onChange={handleImageChange} className="hidden" />
@@ -206,7 +237,7 @@ const SellerPage = () => {
                         {preview.length > 0 && (
                             <div>
                                 <h3 className="text-sm font-bold text-gray-700 mb-2">Image Previews</h3>
-                                <div className="grid grid-cols-3 md:grid-cols-4 gap-4"> {/* Changed to match max 4 */}
+                                <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
                                     {preview.map((src, idx) => (
                                         <div key={idx} className="relative group">
                                             <img
@@ -216,10 +247,10 @@ const SellerPage = () => {
                                             />
                                             <button 
                                                 type="button"
-                                                onClick={() => removeImage(idx)} // Use existing remove function
+                                                onClick={() => removeImage(idx)}
                                                 className="absolute top-1 right-1 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 focus:outline-none"
                                             >
-                                                <X size={14} /> {/* Use X icon */}
+                                                <X size={14} />
                                             </button>
                                         </div>
                                     ))}
@@ -253,3 +284,4 @@ const SellerPage = () => {
 };
 
 export default SellerPage;
+
