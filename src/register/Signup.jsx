@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router";
-import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 import NavbarLanding from "../NavbarLanding";
-
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -15,8 +13,8 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-const backendURL = "https://relayy-backend-9war.onrender.com";
-
+  // Backend URL (switch automatically between local & deployed)
+  const backendURL = "https://relayy-backend-9war.onrender.com";
 
   const collegeOptions = [
     "Thapar University",
@@ -25,9 +23,14 @@ const backendURL = "https://relayy-backend-9war.onrender.com";
     "IIT Ropar",
   ];
 
+  // ---------------- HANDLE SIGNUP ----------------
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) return alert("Passwords do not match");
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -37,101 +40,103 @@ const backendURL = "https://relayy-backend-9war.onrender.com";
         { withCredentials: true }
       );
 
-      const { user, token } = res.data;
-      if (token) Cookies.set("auth_token", token, { expires: 1 / 24 });
-      if (user) localStorage.setItem("user", JSON.stringify(user));
-      navigate("/home");
+      alert(res.data.message || "OTP sent to your email. Please verify.");
+      navigate(`/verify-otp?email=${email}`);
     } catch (err) {
       const backendMessage =
         err.response?.data?.message ||
         err.response?.data?.error ||
-        err.response?.data ||
-        err.message;
-      alert(`Signup failed: ${backendMessage}`);
+        "Signup failed. Please try again.";
+      alert(backendMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // ---------------- UI ----------------
   return (
     <div className="font-josefin min-h-screen flex flex-col bg-white">
-    <NavbarLanding />
+      <NavbarLanding />
+
+      {/* Loader */}
       {isLoading && (
         <div className="fixed inset-0 bg-white/80 flex justify-center items-center z-50">
           <div className="loader border-4 border-emerald-700 border-t-transparent rounded-full w-10 h-10 animate-spin"></div>
         </div>
       )}
 
-      <main className="layout-container flex h-full grow flex-col">
+      <main className="layout-container flex flex-col flex-1">
         <div className="flex flex-1 flex-wrap">
           {/* LEFT SECTION */}
           <div
             className="w-full lg:w-1/2 flex items-start justify-center p-8 lg:p-12 order-2 lg:order-1"
             style={{
-              background: "linear-gradient(to bottom right, #D1FAE5, #FFFFFF, #A7F3D0)",
+              background:
+                "linear-gradient(to bottom right, #D1FAE5, #FFFFFF, #A7F3D0)",
             }}
           >
-            <div className="layout-content-container flex flex-col max-w-[480px] w-full">
-              <div className="flex flex-col gap-3 pb-8 text-center lg:text-left">
-                <p className="text-4xl font-black leading-tight tracking-tight text-gray-900">
+            <div className="max-w-[480px] w-full">
+              <div className="text-center lg:text-left pb-8">
+                <h1 className="text-4xl font-black text-gray-900 leading-tight">
                   Create Your Account
-                </p>
-                <p className="text-emerald-700 text-base font-normal">
+                </h1>
+                <p className="text-emerald-700 text-base">
                   Join your campus marketplace today.
                 </p>
               </div>
 
               {/* Tabs */}
-              <div className="pb-3">
-                <div className="flex border-b border-emerald-300 gap-8">
-                  <button
-                    onClick={() => navigate("/login")}
-                    className="flex-1 py-4 border-b-[3px] border-b-transparent text-emerald-500 hover:text-emerald-700 transition"
-                  >
-                    Login
-                  </button>
-                  <button className="flex-1 py-4 border-b-[3px] border-b-emerald-700 text-emerald-700 font-bold">
-                    Sign Up
-                  </button>
-                </div>
+              <div className="pb-3 border-b border-emerald-300 flex gap-8">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="flex-1 py-4 border-b-[3px] border-b-transparent text-emerald-500 hover:text-emerald-700 transition"
+                >
+                  Login
+                </button>
+                <button className="flex-1 py-4 border-b-[3px] border-b-emerald-700 text-emerald-700 font-bold">
+                  Sign Up
+                </button>
               </div>
 
               {/* FORM */}
-              <form onSubmit={handleSignup} className="flex flex-col gap-4 py-6">
-                {/** Username */}
+              <form
+                onSubmit={handleSignup}
+                className="flex flex-col gap-4 py-6"
+              >
+                {/* Username */}
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">Username</p>
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
+                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
                     placeholder="Enter your username"
                     required
                   />
                 </label>
 
-                {/** Email */}
+                {/* Email */}
                 <label className="flex flex-col">
-                  <p className="text-base font-medium pb-2">Email</p>
+                  <p className="text-base font-medium pb-2">College Email</p>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
-                    placeholder="Enter your email"
+                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
+                    placeholder="Enter your college email"
                     required
                   />
                 </label>
 
-                {/** College */}
+                {/* College */}
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">College</p>
                   <select
                     value={college}
                     onChange={(e) => setCollege(e.target.value)}
+                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none text-gray-700"
                     required
-                    className="rounded-xl h-14 p-4 bg-emerald-100 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400"
                   >
                     <option value="" disabled>
                       Select your College
@@ -144,59 +149,69 @@ const backendURL = "https://relayy-backend-9war.onrender.com";
                   </select>
                 </label>
 
-                {/** Hostel */}
+                {/* Hostel */}
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">Hostel</p>
                   <input
                     type="text"
                     value={hostel}
                     onChange={(e) => setHostel(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
-                    placeholder="Enter your hostel"
+                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
+                    placeholder="Enter your hostel name"
                     required
                   />
                 </label>
 
-                {/** Password */}
+                {/* Password */}
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">Password</p>
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
+                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
                     placeholder="Enter your password"
                     required
                   />
                 </label>
 
-                {/** Confirm Password */}
+                {/* Confirm Password */}
                 <label className="flex flex-col">
-                  <p className="text-base font-medium pb-2">Confirm Password</p>
+                  <p className="text-base font-medium pb-2">
+                    Confirm Password
+                  </p>
                   <input
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
+                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
                     placeholder="Confirm your password"
                     required
                   />
                 </label>
 
+                {/* Submit */}
                 <button
                   type="submit"
-                  className="gradient-button flex items-center justify-center h-12 rounded-xl text-white text-base font-bold bg-gradient-to-r from-emerald-700 to-emerald-600 hover:opacity-90 transition"
+                  disabled={isLoading}
+                  className="h-12 rounded-xl text-white font-bold bg-gradient-to-r from-emerald-700 to-emerald-600 hover:opacity-90 transition"
                 >
                   {isLoading ? "Creating Account..." : "Create Account"}
                 </button>
 
                 <p className="text-sm text-emerald-700 text-center pt-6">
                   By signing up, you agree to our{" "}
-                  <a href="/terms" className="font-medium text-emerald-700 hover:underline">
+                  <a
+                    href="/terms"
+                    className="font-medium text-emerald-700 hover:underline"
+                  >
                     Terms of Service
                   </a>{" "}
                   and{" "}
-                  <a href="/privacy" className="font-medium text-emerald-700 hover:underline">
+                  <a
+                    href="/privacy"
+                    className="font-medium text-emerald-700 hover:underline"
+                  >
                     Privacy Policy
                   </a>
                   .

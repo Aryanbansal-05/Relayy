@@ -20,6 +20,7 @@ import EditProduct from "./Profile/EditProduct";
 import Myproduct_page from "./Profile/Myproduct_page";
 import AllProductsPage from "./all-products/AllProductsPage"; 
 import HostelStores from "./home/HostelStores"; 
+import VerifyOtp from "./register/VerifyOtp";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com/api/v1";
@@ -35,7 +36,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot" element={<Forgot />} />
-
+          <Route path="/verify-otp" element={<VerifyOtp />} />
           {/* Protected routes */}
           <Route
             path="/home"
