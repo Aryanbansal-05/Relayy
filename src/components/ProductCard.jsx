@@ -31,7 +31,7 @@ const ProductCard = ({ product }) => {
         
         {/* Using emerald-700 (#047857) for price. Note: Your design shows '$' but your old code used '₹'. I'll use '$' to match the design. */}
         <p className="text-emerald-700 font-bold text-2xl mb-2">
-          ${product.price}
+          ₹{product.price}
         </p>
         
         {/* Using gray-800 (#1F2937) for secondary text */}
