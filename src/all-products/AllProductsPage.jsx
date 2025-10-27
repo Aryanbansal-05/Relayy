@@ -67,24 +67,23 @@ const AllProductsPage = () => {
     }
 
     // Price Filter
-    if (filters.price !== 'all') {
-      switch (filters.price) {
-        case 'Under $25':
-          tempProducts = tempProducts.filter(p => p.price < 25);
-          break;
-        case '$25 - $50':
-          tempProducts = tempProducts.filter(p => p.price >= 25 && p.price <= 50);
-          break;
-        case '$50 - $100':
-          tempProducts = tempProducts.filter(p => p.price >= 50 && p.price <= 100);
-          break;
-        case 'Over $100':
-          tempProducts = tempProducts.filter(p => p.price > 100);
-          break;
-        default:
-          break;
-      }
-    }
+    if (filters.price !== 'all') {
+      tempProducts = tempProducts.filter(p => {
+        const price = p.price; // Get the product's price
+        switch (filters.price) {
+          case 'under-100':
+            return price < 100;
+          case '100-500':
+            return price >= 100 && price <= 500;
+          case '500-1000':
+            return price >= 500 && price <= 1000;
+          case 'over-1000':
+            return price > 1000;
+          default:
+            return true;
+        }
+      });
+    }
 
     // --- Apply Sorting ---
     if (sortBy === 'priceLowToHigh') {

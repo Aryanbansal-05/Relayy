@@ -2,8 +2,13 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 
 // --- Static data (move to a config file later if you want) ---
-const categories = ['Electronics', 'Textbooks', 'Furniture', 'Clothing', 'Hobbies'];
-const prices = ['Under $25', '$25 - $50', '$50 - $100', 'Over $100'];
+const categories = ['Electronics', 'Books', 'Furniture', 'Clothing', 'Hobbies'];
+const prices = [
+  { value: 'under-100', label: 'Under ₹100' },
+  { value: '100-500',   label: '₹100 - ₹500' },
+  { value: '500-1000',  label: '₹500 - ₹1000' },
+  { value: 'over-1000', label: 'Over ₹1000' }
+];
 const hostels = [
   'Agira Hall', 'Ambaram Hall', 'Amritam Hall', 'Ananta Hall', 
   'Anantam Hall', 'Dhriti Hall', 'Neeram Hall', 'Prithvi Hall', 
@@ -21,9 +26,20 @@ const FilterDropdown = ({ options, value, onChange, placeholder }) => (
                  text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-400"
     >
       <option value="all">{placeholder}</option>
-      {options.map(option => (
-        <option key={option} value={option}>{option}</option>
-      ))}
+      {options.map(option => {
+        // Check if the option is an object or a simple string
+        const isObject = typeof option === 'object' && option !== null && !Array.isArray(option);
+        
+        // Use object properties if it is an object, otherwise use the string itself
+        const optionValue = isObject ? option.value : option;
+        const optionLabel = isObject ? option.label : option;
+
+        return (
+          <option key={optionValue} value={optionValue}>
+            {optionLabel}
+          </option>
+        );
+      })}
     </select>
     <ChevronDown size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
   </div>
