@@ -18,14 +18,21 @@ const SellerPage = () => {
     });
     const [preview, setPreview] = useState([]);
     const [loading, setLoading] = useState(false);
-    // --- New state for drag-and-drop visual feedback ---
     const [isDragging, setIsDragging] = useState(false);
+    const [priceError, setPriceError] = useState("");
 
     const backendURL = "https://relayy-backend-9war.onrender.com";
 
     /* ------------------------- handle input changes ------------------------- */
     const handleChange = (e) => {
         const { name, value } = e.target;
+        if (name === "price") {
+        if (value && !isNaN(value) && parseFloat(value) > 100000) {
+            setPriceError("Price cannot be more than ₹1,00,000");
+        } else {
+            setPriceError(""); // Clear the error if it's valid
+        }
+    }
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -174,8 +181,12 @@ const SellerPage = () => {
                                 onChange={handleChange}
                                 required
                                 min="1"
+                                max="100000"
                                 className="w-full border-2 border-emerald-100 bg-emerald-50 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
                             />
+                            {priceError && (
+                            <p className="text-red-600 text-sm mt-1">{priceError}</p>
+                            )}
                         </div>
 
                         {/* Category */}
@@ -261,7 +272,7 @@ const SellerPage = () => {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || !!priceError}
                             className="w-full flex items-center justify-center bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-6 py-3 rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-800 transition shadow-md transform hover:scale-105 disabled:opacity-70"
                         >
                             {loading ? (
