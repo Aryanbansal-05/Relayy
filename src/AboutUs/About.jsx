@@ -1,11 +1,21 @@
 import React from 'react';
+import AboutHero from './Hero';
+import OurMission from './OurMission';
+import MeetTheTeam from './MeetTheTeam';
+import Navbar from '../Navbar';
 
-function About() {
-    return ( 
-        <>
-        <h1 id='/about'>About page</h1>
-        </>
-     );
-}
+const AboutUsPage = () => {
+  return (
+    <div className="font-display min-h-screen bg-white">
 
-export default About;
+      <main>
+      <Navbar />
+        <AboutHero />
+        <OurMission />
+        <MeetTheTeam />
+      </main>
+    </div>
+  );
+};
+
+export default AboutUsPage;

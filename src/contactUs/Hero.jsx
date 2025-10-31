@@ -1,9 +1,5 @@
 import React from 'react';
 
-/**
- * CREATIVE UPDATE: Replaced the simple white hero with a
- * vibrant gradient based on your Emerald Theme file.
- */
 const Hero = ({ title, subtitle }) => {
   return (
     // Using emerald-600 and emerald-700 for a strong accent gradient
