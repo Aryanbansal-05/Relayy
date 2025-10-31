@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const res = await axios.get("https://relayy-backend-9war.onrender.com/api/v1/users/verify", {
+        const res = await axios.get("http://localhost:8000/api/v1/users/verify", {
           withCredentials: true, // ✅ sends cookies for auth
         });
 

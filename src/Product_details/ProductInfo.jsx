@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import OfferModal from './OfferModal'; // <-- Import the new modal component
+import OfferModal from "./OfferModal"; // ✅ Import your working modal
 
 // --- SVG ICONS ---
 const MessageIcon = () => (
-  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
   </svg>
 );
 
 const OfferIcon = () => (
-  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5l7 7-7 7H7V3z"></path>
   </svg>
 );
 
+// --- Rating Stars ---
 const StarRating = ({ rating = 4.5 }) => {
   const fullStars = Math.floor(rating);
   const halfStar = rating % 1 !== 0;
@@ -34,7 +35,7 @@ const StarRating = ({ rating = 4.5 }) => {
 };
 
 const Star = ({ fill, half }) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <defs>
       {half && (
         <clipPath id="half-star">
@@ -50,30 +51,15 @@ const Star = ({ fill, half }) => (
   </svg>
 );
 
-
-// --- Main Info Component ---
-export default function ProductInfo({ product }) {
+// --- Main Product Info Component ---
+export default function ProductInfo({ product, currentUser }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false); // <-- New state for modal
+  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
 
   const description = product.description || "No description available.";
   const canTruncate = description.length > 150;
   const displayDescription =
-    canTruncate && !isExpanded
-      ? `${description.substring(0, 150)}...`
-      : description;
-
-  const handleOfferSubmit = ({ offerAmount, message }) => {
-    // In a real application, you would send this to your backend
-    console.log("Offer Submitted:", {
-      productId: product._id,
-      offerAmount,
-      message,
-      sellerEmail: product.userEmail,
-    });
-    alert(`Offer of ₹${offerAmount} submitted! Message: "${message}"`);
-    setIsOfferModalOpen(false); // Close modal after submission
-  };
+    canTruncate && !isExpanded ? `${description.substring(0, 150)}...` : description;
 
   return (
     <div className="lg:sticky lg:top-8 flex flex-col gap-6">
@@ -91,9 +77,7 @@ export default function ProductInfo({ product }) {
         <span className="inline-block bg-emerald-100 text-emerald-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
           {product.condition || "Gently Used"}
         </span>
-        <p className="text-gray-800 text-base leading-relaxed">
-          {displayDescription}
-        </p>
+        <p className="text-gray-800 text-base leading-relaxed">{displayDescription}</p>
         {canTruncate && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -104,16 +88,16 @@ export default function ProductInfo({ product }) {
         )}
       </div>
 
-      {/* --- Seller Card --- */}
+      {/* --- Seller Info --- */}
       <div className="bg-white rounded-2xl shadow-lg p-4 flex flex-col sm:flex-row justify-between sm:items-center border border-gray-100">
         <div className="flex items-center mb-4 sm:mb-0">
           <img
-            src={`https://ui-avatars.com/api/?name=${product.username || 'Jane Doe'}&background=random`}
+            src={`https://ui-avatars.com/api/?name=${product.username || "Seller"}&background=random`}
             alt={product.username || "Seller"}
             className="w-12 h-12 rounded-full mr-4"
           />
           <div>
-            <p className="text-lg font-semibold text-gray-900">{product.username || "Jane Doe"}</p>
+            <p className="text-lg font-semibold text-gray-900">{product.username}</p>
             <p className="text-sm text-gray-800">Sold By</p>
           </div>
         </div>
@@ -130,7 +114,7 @@ export default function ProductInfo({ product }) {
           Message Seller
         </a>
         <button
-          onClick={() => setIsOfferModalOpen(true)} // <-- Open modal on click
+          onClick={() => setIsOfferModalOpen(true)}
           className="w-full bg-gray-900 hover:bg-gray-800 text-white text-lg font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
         >
           <OfferIcon />
@@ -138,13 +122,16 @@ export default function ProductInfo({ product }) {
         </button>
       </div>
 
-      {/* --- Offer Modal (Conditional Rendering) --- */}
+      {/* --- Offer Modal --- */}
       {isOfferModalOpen && (
         <OfferModal
+          productId={product._id}               // ✅ send ID
           productName={product.title}
           currentPrice={product.price}
-          onSubmit={handleOfferSubmit}
-          onClose={() => setIsOfferModalOpen(false)} // <-- Close modal
+          productImage={product.imageUrls[0]}
+          buyerName={currentUser?.name}         // ✅ buyer details
+          buyerEmail={currentUser?.email}
+          onClose={() => setIsOfferModalOpen(false)}
         />
       )}
     </div>

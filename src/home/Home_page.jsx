@@ -69,7 +69,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
-  const backendURL = "https://relayy-backend-9war.onrender.com";
+  const backendURL = "http://localhost:8000";
 
   useEffect(() => {
     const loadUserAndProducts = async () => {

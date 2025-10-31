@@ -12,7 +12,7 @@ function Navbar({ searchQuery, setSearchQuery }) {
     const handleLogout = async () => {
         try {
             await axios.post(
-                "https://relayy-backend-9war.onrender.com/api/v1/users/logout",
+                "http://localhost:8000/api/v1/users/logout",
                 {},
                 { withCredentials: true }
             );
