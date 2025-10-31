@@ -57,9 +57,7 @@ function App() {
           <Route
             path="/contact"
             element={
-              <ProtectedRoute>
                 <Contact_page />
-              </ProtectedRoute>
             }
           />
           <Route
@@ -73,9 +71,7 @@ function App() {
           <Route
             path="/about"
             element={
-              <ProtectedRoute>
                 <About />
-              </ProtectedRoute>
             }
           />
           <Route
