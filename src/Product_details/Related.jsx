@@ -9,7 +9,7 @@ const Related = ({ category, currentProductId }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const backendURL = "http://localhost:8000";
+  const backendURL = "https://relayy-backend-9war.onrender.com";
 
   useEffect(() => {
     const fetchRelatedProducts = async () => {

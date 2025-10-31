@@ -7,7 +7,7 @@ export default function VerifyOtp() {
   const [params] = useSearchParams();
   const email = params.get("email");
   const navigate = useNavigate();
-  const backendURL = "http://localhost:8000";
+  const backendURL = "https://relayy-backend-9war.onrender.com";
   const [resendTimer, setResendTimer] = useState(0);
 
   useEffect(() => {

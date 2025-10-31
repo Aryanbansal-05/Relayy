@@ -11,7 +11,7 @@ function Product_page() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const backendURL = "http://localhost:8000";
+  const backendURL = "https://relayy-backend-9war.onrender.com";
 
   useEffect(() => {
     const fetchProduct = async () => {

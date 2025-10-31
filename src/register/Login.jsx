@@ -12,7 +12,7 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const backendURL = "http://localhost:8000";
+  const backendURL = "https://relayy-backend-9war.onrender.com";
 
   const handleLogin = async (e) => {
   e.preventDefault();
