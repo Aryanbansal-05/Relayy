@@ -57,7 +57,7 @@ export default function OfferModal({
 
       console.log("📤 Sending Offer Payload:", payload);
 
-      await axios.post("http://localhost:8000/api/send-offer", payload);
+      await axios.post("https://relayy-backend-9war.onrender.com/api/send-offer", payload);
       alert("✅ Offer submitted! Seller has been notified.");
       setOfferAmount("");
       setMessage("");
