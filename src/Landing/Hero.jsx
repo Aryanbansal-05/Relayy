@@ -9,36 +9,8 @@ const HeroSection = () => {
 
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-emerald-100 p-4 text-center clip-path-swoop">
-
-      <div className="fixed top-8 left-8 z-20 flex gap-6"> 
-        <button
-          onClick={() => navigate('/contact')}
-          className="font-body font-medium text-lg text-emerald-800/80 py-3 transition-all duration-300 transform hover:scale-110 hover:text-emerald-900"
-        >
-          Contact
-        </button>
-        <button
-          onClick={() => navigate('/about')}
-          className="font-body font-medium text-lg text-emerald-800/80 py-3 transition-all duration-300 transform hover:scale-110 hover:text-emerald-900"
-        >
-          About Us
-        </button>
-      </div>
-      {/* --- END ADDED TEXT LINKS --- */}
-
-
-      {/* --- Your Existing Login/Signup Buttons (RIGHT) --- */}
-      <div className="fixed top-8 right-8 z-20 flex gap-4">
-        <button onClick={() => navigate('/login')} className="font-display font-bold text-lg text-emerald-800 bg-white/70 backdrop-blur-md border border-white/80 rounded-full px-8 py-3 shadow-lg shadow-emerald-500/20 hover:bg-white transition-all duration-300 transform hover:scale-105">
-          Login
-        </button>
-        <button onClick={() => navigate('/signup')} className="font-display font-bold text-lg text-white bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full px-8 py-3 shadow-2xl shadow-emerald-500/40 hover:shadow-emerald-600/60 transition-all duration-300 transform hover:scale-105 hover:from-emerald-600 hover:to-emerald-500">
-          Signup
-        </button>
-      </div>
-      {/* --- END LOGIN/SIGNUP BUTTONS --- */}
-
       
+
       {/* --- Rest of your Hero Section Code --- */}
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-200 via-emerald-100 to-white/50 opacity-90"></div>
       <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-60"></div>
@@ -53,7 +25,8 @@ const HeroSection = () => {
       ></div>
 
       <div className="relative z-10 animate-fade-in-up">
-        <h1 className="font-display text-8xl font-extrabold uppercase tracking-widest text-gray-900 md:text-9xl [text-shadow:_0_8px_20px_rgb(16_185_129_/_0.2)]">
+        {/* --- RESPONSIVE FIX: Scaled down text for mobile --- */}
+        <h1 className="font-display text-6xl sm:text-8xl md:text-9xl font-extrabold uppercase tracking-widest text-gray-900 [text-shadow:_0_8px_20px_rgb(16_185_129_/_0.2)]">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-700">
             R
           </span>
@@ -73,10 +46,12 @@ const HeroSection = () => {
             Y
           </span>
         </h1>
-        <p className="font-body mt-4 text-xl font-medium text-emerald-800/90 md:text-3xl [text-shadow:_0_2px_4px_rgb(255_25f_255_/_80%)]">
+        {/* --- RESPONSIVE FIX: Scaled down text for mobile --- */}
+        <p className="font-body mt-4 text-lg sm:text-xl md:text-3xl font-medium text-emerald-800/90 [text-shadow:_0_2px_4px_rgb(255_25f_255_/_80%)]">
           The story of stuff. Relayed.
         </p>
-        <div className="mt-24 flex flex-col items-center gap-3">
+        {/* --- RESPONSIVE FIX: Reduced margin-top on mobile --- */}
+        <div className="mt-16 sm:mt-24 flex flex-col items-center gap-3">
           <p className="font-body text-base text-emerald-700/80">
             Scroll to begin the journey
           </p>
