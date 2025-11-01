@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom'; // <-- 1. Import useSearchParams
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import FilterSort from './FilterSort'; 
 import PageNav from './PageNav';
 
 const ProductBrowser = () => {
+  // --- 2. Read the category from the URL ---
+  const [searchParams] = useSearchParams();
+  const categoryFromUrl = searchParams.get('category') || 'all'; // Gets 'Electronics' or defaults to 'all'
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   
+  // --- 3. Set the initial filter state from the URL ---
   const [filters, setFilters] = useState({
-    category: 'all',
+    category: categoryFromUrl, // <-- This is the key change
     price: 'all',
     hostel: 'all',
   });
@@ -33,7 +39,7 @@ const ProductBrowser = () => {
           : productRes.data.products || [];
         
         setProducts(allProductsData);
-        setFilteredProducts(allProductsData);
+        // We no longer setFilteredProducts here, useEffect #2 will handle it
       } catch (err) {
         console.error("Error fetching products:", err);
       } finally {
@@ -56,6 +62,7 @@ const ProductBrowser = () => {
       );
     }
 
+    // (The rest of your filter logic...)
     // Hostel Filter
     if (filters.hostel !== 'all') {
       tempProducts = tempProducts.filter(p => 

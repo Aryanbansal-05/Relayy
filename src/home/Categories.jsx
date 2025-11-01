@@ -1,23 +1,23 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // <-- 1. Import useNavigate
 import { Package, Book, Sofa, Shirt, Dices } from 'lucide-react'; // Example icons
 
 const categories = [
   { name: 'Electronics', icon: Package, color: 'bg-teal-400' },
-  { name: 'Textbooks', icon: Book, color: 'bg-blue-400' },
+  { name: 'Books', icon: Book, color: 'bg-blue-400' },
   { name: 'Furniture', icon: Sofa, color: 'bg-purple-400' },
   { name: 'Clothing', icon: Shirt, color: 'bg-lime-400' },
   { name: 'Hobbies', icon: Dices, color: 'bg-orange-400' },
 ];
 
-// Receives state and setter from Home.jsx
-const Categories = ({ selectedCategory, setSelectedCategory }) => {
-  
+// 2. Remove selectedCategory and setSelectedCategory props
+const Categories = () => {
+  const navigate = useNavigate(); // <-- 3. Initialize navigate
+
+  // 4. Change the click handler to navigate
   const handleCategoryClick = (categoryName) => {
-    if (selectedCategory === categoryName) {
-      setSelectedCategory(null); // Toggle off if clicked again
-    } else {
-      setSelectedCategory(categoryName);
-    }
+    // This creates the URL: /all-products?category=Electronics
+    navigate(`/all-products?category=${categoryName}`);
   };
   
   return (
@@ -26,13 +26,13 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
         {categories.map((cat) => (
           <button
             key={cat.name}
-            onClick={() => handleCategoryClick(cat.name)}
+            onClick={() => handleCategoryClick(cat.name)} // <-- 5. This uses the new handler
             className={`
               ${cat.color} text-white font-semibold p-6 rounded-lg 
               flex flex-col items-center justify-center 
               shadow-lg hover:shadow-xl transform hover:-translate-y-1 
               transition-all duration-300
-              ${selectedCategory === cat.name ? 'ring-4 ring-offset-2 ring-emerald-700' : ''}
+              // 6. Remove the 'ring' style since it's no longer needed
             `}
           >
             <cat.icon size={32} className="mb-2" />

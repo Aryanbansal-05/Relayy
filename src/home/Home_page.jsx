@@ -1,16 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
-import Navbar from "../Navbar"; 
-import Hero from "./Hero";
-import Categories from "./Categories";
-import RecentlyListed from "./RecentlyListed";
+
+// Import all your sections
+import Navbar from '../Navbar'; // Adjust path if needed
+import Footer from '../Footer'; // Adjust path if needed
+import Hero from './Hero';
+import Categories from './Categories';
+import HostelStores from './HostelStores'; // This is correct
+import RecentlyListed from './RecentlyListed';
+import Features from './Features';
 
 // Icons for the features section
 import { PlusCircle, ShieldCheck, Truck } from 'lucide-react';
 
-// Helper function (can be moved to a utils.js file if you have one)
+// --- Helper function ---
 function decodeJwtPayload(token) {
   try {
     const base64Url = token.split(".")[1];
@@ -26,21 +30,6 @@ function decodeJwtPayload(token) {
     return null;
   }
 }
-
-// --- Static Hostel Data ---
-const hostelNames = [
-  'Agira Hall', 'Ambaram Hall', 'Amritam Hall', 'Ananta Hall', 
-  'Anantam Hall', 'Dhriti Hall', 'Neeram Hall', 'Prithvi Hall', 
-  'Tejas Hall', 'Vahni Hall', 'Viyat Hall', 'Vyan Hall', 'Vyom Hall'
-];
-
-// Automatically generate hostel data objects
-const hostels = hostelNames.map(name => ({
-  name: name,
-  // NOTE: You will need to add images to your public folder
-  // using this path format, e.g., /images/hostels/agira-hall.jpg
-  img: `/images/hostels/${name.toLowerCase().replace(' ', '-')}.jpg`
-}));
 
 // --- Static Features Data ---
 const features = [
@@ -61,22 +50,28 @@ const features = [
   },
 ];
 
-
-const Home = () => {
+// --- The Main Page Component ---
+const Home_page = () => {
+  //
+  // --- 1. ADD ALL YOUR STATE HOOKS ---
+  //
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [allProducts, setAllProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // <-- "loading" is now defined
   const [user, setUser] = useState(null);
 
   const backendURL = "https://relayy-backend-9war.onrender.com";
 
+  //
+  // --- 2. ADD YOUR DATA FETCHING LOGIC ---
+  //
   useEffect(() => {
     const loadUserAndProducts = async () => {
       try {
         setLoading(true);
 
-        // 1️⃣ Get user email (same as your logic)
+        // 1. Get user email
         let email = null;
         try {
           const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -96,18 +91,17 @@ const Home = () => {
           return;
         }
 
-        // 2️⃣ Fetch user details
+        // 2. Fetch user details
         const userRes = await axios.get(`${backendURL}/api/v1/users/${email}`);
         setUser(userRes.data || null);
-        console.log("USER DATA FROM API:", userRes.data);
 
-        // 3️⃣ Fetch all products
+        // 3. Fetch all products
         const productRes = await axios.get(`${backendURL}/api/v1/products`);
         const allProductsData = Array.isArray(productRes.data)
           ? productRes.data
           : productRes.data.products || [];
 
-        // 4️⃣ Filter by college domain
+        // 4. Filter by college domain
         const domain = email.split("@")[1].toLowerCase();
         const sameCollege = allProductsData.filter(
           (p) =>
@@ -126,7 +120,9 @@ const Home = () => {
     loadUserAndProducts();
   }, [backendURL]);
 
-  // Updated filter logic
+  //
+  // --- 3. ADD YOUR FILTERING LOGIC ---
+  //
   const filteredProducts = allProducts.filter((p) => {
     const title = (p.title || p.name || "").toLowerCase();
     
@@ -143,109 +139,42 @@ const Home = () => {
     return true;
   });
 
-  // Get first 6 recent products
+  //
+  // --- 4. "recentProducts" IS NOW DEFINED ---
+  //
   const recentProducts = filteredProducts.slice(0, 6);
-  const scrollContainerRef = useRef(null); // <-- ADD THIS LINE
 
-  // ADD THESE TWO FUNCTIONS
-  const scroll = (scrollOffset) => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: scrollOffset, behavior: 'smooth' });
-    }
-  };
 
-  if (loading) {
+  // Show main loader
+  if (loading && allProducts.length === 0) {
     return (
       <div className="flex justify-center items-center h-screen">
-        {/* You can use your existing loader style */}
         <div className="loader" /> 
       </div>
     );
   }
 
+  //
+  // --- 5. YOUR RETURN STATEMENT (NOW WITH PROPS) ---
+  //
   return (
-    // Use emerald-50 for the light green page background from the design
     <div className="font-poppins min-h-screen bg-emerald-50">
       <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
       <main>
+        {/* Stack all your sections here */}
         <Hero user={user} />
-        <Categories 
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory} 
-        />
-
-        {/* --- Hostel Stores Section (Inlined) --- */}
-        <div className="py-12 bg-emerald-50">
-          <div className="max-w-6xl mx-auto px-4">
-
-            {/* --- ADDED: Wrapper for Title + Buttons --- */}
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold text-gray-900">Browse by Hostel</h2>
-              <div className="flex space-x-2">
-                <button
-  onClick={() => scroll(-300)} 
-  className="p-2 text-gray-800 hover:text-emerald-600 transition" 
-  aria-label="Scroll left"
->
-                  <ChevronLeft size={24} />
-                </button>
-                <button
-  onClick={() => scroll(-300)} 
-  className="p-2 text-gray-800 hover:text-emerald-600 transition" 
-  aria-label="Scroll right"
->
-                  <ChevronRight size={24} />
-                </button>
-              </div>
-            </div>
-            
-            {/* --- MODIFIED: Scroll container --- */}
-            <div 
-  ref={scrollContainerRef} 
-  className="flex overflow-x-auto space-x-6 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
->
-              
-              {hostels.map((hostel) => (
-                <div
-                  key={hostel.name}
-  className="w-72 flex-shrink-0 bg-white rounded-lg shadow-md overflow-hidden 
-             hover:shadow-lg transition-shadow duration-300 cursor-pointer"
->
-                  <img 
-                    src={hostel.img} 
-                    alt={hostel.name} 
-                    className="w-full h-48 object-cover" 
-                  />
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg text-gray-800">{hostel.name}</h3>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
+        <Categories />
+        
+        <HostelStores /> {/* This component is self-contained */}
+        
+        {/* These props now exist! */}
         <RecentlyListed 
           products={recentProducts} 
-          loading={loading} // Pass loading state
+          loading={loading}
         />
-
-        {/* --- Features Section (Inlined) --- */}
-        <div className="py-16 px-4 bg-emerald-50">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-            {features.map((feature) => (
-              <div key={feature.name} className="flex flex-col items-center">
-                {/* Icon color using emerald-700 (#047857) */}
-                <feature.icon className="text-emerald-700 mb-4" size={48} />
-                {/* Heading using gray-900 (#111827) */}
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.name}</h3>
-                {/* Description using gray-800 (#1F2937) */}
-                <p className="text-gray-800">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        
+        <Features />
         
       </main>
 
@@ -253,4 +182,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Home_page;

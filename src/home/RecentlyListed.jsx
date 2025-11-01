@@ -1,20 +1,21 @@
 import React from 'react';
-import ProductCard from '../components/ProductCard'; // Imports the new ProductCard
+import ProductCard from '../components/ProductCard'; 
 
-const RecentlyListed = ({ products, loading }) => {
+const RecentlyListed = ({ products = [], loading = false }) => {
   return (
+    // This bg-emerald-50 matches the parent page's background
     <div className="py-12 px-4 bg-emerald-50">
       <div className="max-w-6xl mx-auto">
+        
+        {/* Section Header */}
         <div className="flex justify-between items-center mb-6">
-          {/* Using gray-900 (#111827) for heading */}
-          <h2 className="text-3xl font-bold text-gray-900">Recently Listed Items</h2>
-          {/* Using emerald-700 (#047857) for link */}
+          <h1 className="text-4xl font-bold text-gray-900">Recently Listed Items</h1>
           <a href="/all-products" className="text-emerald-700 font-semibold hover:underline">
             See All
           </a>
         </div>
         
-        {/* This component doesn't need its own loader if Home.jsx already has one */}
+        {/* Products Grid */}
         {products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => (
@@ -22,7 +23,8 @@ const RecentlyListed = ({ products, loading }) => {
             ))}
           </div>
         ) : (
-          // Show this message only if not loading and no products
+          // This logic correctly shows a message ONLY if
+          // loading is false AND there are no products.
           !loading && (
             <p className="text-gray-500 text-lg text-center mt-12">
               No listings found for your campus yet.
