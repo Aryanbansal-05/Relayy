@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NavbarLanding from "../NavbarLanding";
+import loginimg from "./loginimage.png";
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -224,7 +225,7 @@ function Signup() {
           <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-green-100 to-emerald-200 opacity-30"></div>
             <img
-              src="/images/signup-illustration.png"
+              src={loginimg}
               alt="Campus community illustration"
               className="w-full h-full object-cover relative z-10"
             />

@@ -17,8 +17,8 @@ function Footer() {
           {/* Logo + About */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-full bg-emerald-400 flex items-center justify-center shadow-md">
-                <img src={relayyLogo} alt="Relayy Logo" className="w-8 h-8" />
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
+                <img src={relayyLogo} alt="Relayy Logo" className="w-12 h-12" />
               </div>
               <h2 className="text-2xl font-bold tracking-tight text-white">
                 RELAYY
