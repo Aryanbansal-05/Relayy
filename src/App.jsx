@@ -21,6 +21,7 @@ import Myproduct_page from "./Profile/Myproduct_page";
 import AllProductsPage from "./all-products/AllProductsPage"; 
 import HostelStores from "./home/HostelStores"; 
 import VerifyOtp from "./register/VerifyOtp";
+import EditProfile from "./Profile/EditProfile";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com/api/v1";
@@ -79,6 +80,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile_page />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-profile" 
+            element={
+              <ProtectedRoute>
+                <EditProfile />
               </ProtectedRoute>
             }
           />
