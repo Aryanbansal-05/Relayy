@@ -22,6 +22,8 @@ import AllProductsPage from "./all-products/AllProductsPage";
 import HostelStores from "./home/HostelStores"; 
 import VerifyOtp from "./register/VerifyOtp";
 import EditProfile from "./Profile/EditProfile";
+import RelayyInbox from "./components/RelayyInbox";
+import UserListPage from "./components/UserListPage";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com/api/v1";
@@ -134,7 +136,22 @@ function App() {
               </ProtectedRoute>
             }
           />
-
+           <Route
+            path="/inbox"
+            element={
+              <ProtectedRoute>
+                <RelayyInbox />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <UserListPage />
+              </ProtectedRoute>
+            }
+          />
           
           {/* <Route
             path="/hostel/:hostelName" 

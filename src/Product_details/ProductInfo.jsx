@@ -106,13 +106,13 @@ export default function ProductInfo({ product, currentUser }) {
 
       {/* --- Action Buttons --- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <a
+        {/* <a
           href={`mailto:${product.userEmail}`}
           className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-center text-lg font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
         >
           <MessageIcon />
           Message Seller
-        </a>
+        </a> */}
         <button
           onClick={() => setIsOfferModalOpen(true)}
           className="w-full bg-gray-900 hover:bg-gray-800 text-white text-lg font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"

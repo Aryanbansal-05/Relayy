@@ -4,12 +4,14 @@ import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 import NavbarLanding from "../NavbarLanding";
 import loginimg from "./loginimage.png";
-
+import { useAuth } from "../Context/AuthContext";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth(); // 4. Get the login function from context
+const [error, setError] = useState(null); // 3. Add error state
   const navigate = useNavigate();
 
   const backendURL = "https://relayy-backend-9war.onrender.com";
@@ -17,7 +19,7 @@ function Login() {
   const handleLogin = async (e) => {
   e.preventDefault();
   setIsLoading(true);
-
+   setError(null); // 5. Clear previous errors
   try {
     const res = await axios.post(
       `${backendURL}/api/v1/users/login`,
@@ -30,7 +32,7 @@ function Login() {
     // Optional: Only set cookie if backend doesn't issue HttpOnly cookie
     if (token) Cookies.set("auth_token", token, { expires: 1 / 24, sameSite: "Strict" });
     if (user) localStorage.setItem("user", JSON.stringify(user));
-
+    login(user, token);
     navigate("/home");
   } catch (err) {
     const backendMessage =
@@ -40,6 +42,7 @@ function Login() {
       err.message;
     console.error("Login failed:", backendMessage);
     alert(`Login failed: ${backendMessage}`);
+    setError(backendMessage); // 7. Set error state instead of using alert
   } finally {
     setIsLoading(false);
   }
