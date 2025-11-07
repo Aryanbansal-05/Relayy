@@ -14,12 +14,12 @@ function RelayyInbox() {
   const [searchQuery, setSearchQuery] = useState("");
   const [unreadCounts, setUnreadCounts] = useState({});
 
-  const backendURL = import.meta.env.VITE_BACKEND_URL || "https://relayy-backend-9war.onrender.com";
+  const backendURL = import.meta.env.VITE_BACKEND_URL || "https://relayy-backend-9war.onrender.com"; 
 
   useEffect(() => {
     if (!token) {
       setLoading(false);
-      setError("You must be logged in to view your messages.");
+      setError("You must  be logged in to view your messages.");
       return;
     }
 
