@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-// ... (your SVG icons remain the same) ...
 const CloseIcon = () => (
-  <svg className="w-6 h-6 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <svg className="w-6 h-6 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
   </svg>
 );
+
 const ModalIcon = () => (
-  <svg className="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 12v.01m0-4.01V7m0 4.01v.01m0 3.99V16m0-4v.01m0 .01H12m0 0h.01m-4.01 4.01v.01m0-4.01v.01m4.01 0v.01m0 0h.01m-4.01-4.01v.01M12 7v.01M12 16v.01m0-4v.01m0 0h.01M7.99 16.01v.01m0-4v.01m4.01 0v.01m0 0h.01m-4.01 4.01v.01M12 16.01v.01m0-4.01v.01m3.99-.01v.01m0 4.01v.01m-4.01 0v.01M12 12.01v.01"></path>
+  <svg className="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2" />
   </svg>
 );
-// ...
 
-export default function OfferModal({ productName, currentPrice, onSubmit, onClose }) {
-  const [offerAmount, setOfferAmount] = useState('');
-  const [message, setMessage] = useState('');
+export default function OfferModal({
+  productId,
+  productName,
+  currentPrice,
+  onClose,
+}) {
+  const [offerAmount, setOfferAmount] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  useEffect(() => setIsMounted(true), []);
 
   const handleClose = () => {
     setIsMounted(false);
@@ -28,40 +33,59 @@ export default function OfferModal({ productName, currentPrice, onSubmit, onClos
   };
 
   const handleBackdropClick = (e) => {
-    // If the click is on the backdrop itself (not the card), close.
-    if (e.target === e.currentTarget) {
-      handleClose();
-    }
+    if (e.target === e.currentTarget) handleClose();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (offerAmount && parseFloat(offerAmount) > 0) {
-      onSubmit({ offerAmount: parseFloat(offerAmount), message });
-      setOfferAmount('');
-      setMessage('');
-    } else {
-      alert('Please enter a valid offer amount.');
+
+    if (!offerAmount || parseFloat(offerAmount) <= 0)
+      return alert("Please enter a valid offer amount.");
+
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    if (!currentUser || !currentUser._id)
+      return alert("Please log in to make an offer.");
+
+    setLoading(true);
+    try {
+      const payload = {
+        productId,
+        buyerId: currentUser._id, // ✅ send only buyerId
+        offerAmount,
+        message,
+      };
+
+      console.log("📤 Sending Offer Payload:", payload);
+
+      await axios.post("https://relayy-backend-9war.onrender.com/api/send-offer", payload);
+      alert("✅ Offer submitted! Seller has been notified.");
+      setOfferAmount("");
+      setMessage("");
+      handleClose();
+    } catch (error) {
+      console.error("❌ Error sending offer:", error);
+      alert("Failed to send offer. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    // --- THIS IS THE UPDATED LINE ---
-    <div 
-      onClick={handleBackdropClick} // Add this onClick handler
-      className={`fixed inset-0 bg-gray-600 bg-opacity-75 flex justify-center items-center p-4 z-50 transition-opacity duration-300 ease-out
-      ${isMounted ? 'opacity-100' : 'opacity-0'}
-    `}>
-      {/* The rest of the file is unchanged.
-        The `handleBackdropClick` function works because the modal card
-        is a *child* of this div. Clicks on the card won't bubble up
-        as e.target === e.currentTarget.
-      */}
-      <div className={`bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative transform transition-all duration-300 ease-out
-        ${isMounted ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
-      `}>
-        
-        <button onClick={handleClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+    <div
+      onClick={handleBackdropClick}
+      className={`fixed inset-0 bg-gray-600 bg-opacity-75 flex justify-center items-center p-4 z-50 transition-opacity duration-300 ${
+        isMounted ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div
+        className={`bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative transform transition-all duration-300 ${
+          isMounted ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        }`}
+      >
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+        >
           <CloseIcon />
         </button>
 
@@ -72,14 +96,14 @@ export default function OfferModal({ productName, currentPrice, onSubmit, onClos
         <div className="mt-3 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Make an Offer</h2>
           <p className="text-gray-600 mb-6">
-            You're offering on <span className="font-semibold">"{productName}"</span>.
-            Current price: <span className="font-bold">₹{currentPrice}</span>
+            You're offering on{" "}
+            <span className="font-semibold">"{productName}"</span>. Current price:{" "}
+            <span className="font-bold">₹{currentPrice}</span>
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* ... (form inputs remain the same) ... */}
-           <div className="mb-4">
+          <div className="mb-4">
             <label htmlFor="offerAmount" className="block text-gray-700 text-sm font-bold mb-2">
               Your Offer Amount (₹)
             </label>
@@ -88,10 +112,8 @@ export default function OfferModal({ productName, currentPrice, onSubmit, onClos
               id="offerAmount"
               value={offerAmount}
               onChange={(e) => setOfferAmount(e.target.value)}
-              placeholder="e.g., 800"
-              min="1"
-              step="any"
-              className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              placeholder="e.g., 34000"
+              className="shadow-sm border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 focus:ring-2 focus:ring-emerald-500"
               required
             />
           </div>
@@ -106,11 +128,11 @@ export default function OfferModal({ productName, currentPrice, onSubmit, onClos
               onChange={(e) => setMessage(e.target.value)}
               rows="3"
               placeholder="e.g., 'I can pick this up tomorrow if you accept!'"
-              className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="shadow-sm border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 focus:ring-2 focus:ring-emerald-500"
             ></textarea>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:justify-end sm:space-x-3 space-y-2 sm:space-y-0">
+          <div className="flex justify-end gap-3">
             <button
               type="button"
               onClick={handleClose}
@@ -120,9 +142,14 @@ export default function OfferModal({ productName, currentPrice, onSubmit, onClos
             </button>
             <button
               type="submit"
-              className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white rounded-lg font-bold shadow-md hover:shadow-lg transition-all"
+              disabled={loading}
+              className={`px-6 py-3 rounded-lg font-bold shadow-md transition-all ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed text-white"
+                  : "bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white"
+              }`}
             >
-              Submit Offer
+              {loading ? "Sending..." : "Submit Offer"}
             </button>
           </div>
         </form>
