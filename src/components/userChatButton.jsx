@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MessageCircle } from "lucide-react";
-import RelayyChat from "./Relayychat";
+import RelayyChat from "./RelayyChat";
 import { useAuth } from "../Context/AuthContext";
 
 function UserChatButton({ receiverId, receiverName }) {

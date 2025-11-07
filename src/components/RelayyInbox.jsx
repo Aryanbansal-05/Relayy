@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext.jsx";
 import Navbar from "../Navbar.jsx";
-import RelayyChat from "./Relayychat.jsx";
+import RelayyChat from "./RelayyChat.jsx";
 import { MessageCircle, Search, MoreVertical } from "lucide-react";
 
 function RelayyInbox() {

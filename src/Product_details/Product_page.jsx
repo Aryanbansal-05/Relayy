@@ -5,7 +5,7 @@ import Hero from "./Hero";
 import ProductInfo from "./ProductInfo";
 import Related from "./Related";
 import axios from "axios";
-import RelayyChat from "../components/Relayychat";
+import RelayyChat from "../components/RelayyChat";
 import { useAuth } from "../Context/AuthContext";
 function Product_page() {
   const { id } = useParams();
