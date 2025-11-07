@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../Navbar";
-import UserChatButton from "./UserChatButton";
+import UserChatButton from "./userChatButton";
 import { useAuth } from "../Context/AuthContext";
 
 function UserListPage() {
