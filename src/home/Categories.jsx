@@ -7,7 +7,7 @@ const categories = [
   { name: 'Books', icon: Book, color: 'bg-blue-400' },
   { name: 'Furniture', icon: Sofa, color: 'bg-purple-400' },
   { name: 'Clothing', icon: Shirt, color: 'bg-lime-400' },
-  { name: 'Hobbies', icon: Dices, color: 'bg-orange-400' },
+  { name: 'Other', icon: Dices, color: 'bg-orange-400' },
 ];
 
 // 2. Remove selectedCategory and setSelectedCategory props
