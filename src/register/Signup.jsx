@@ -8,8 +8,9 @@ function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [college, setCollege] = useState("");
-  const [autoDetected, setAutoDetected] = useState(false); // NEW: track auto-fill
+  const [autoDetected, setAutoDetected] = useState(false);
   const [hostel, setHostel] = useState("");
+  const [hostelOptions, setHostelOptions] = useState([]); // ✅ Dynamic hostel list
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +18,7 @@ function Signup() {
 
   const backendURL = "https://relayy-backend-9war.onrender.com";
 
-  // College dropdown options (fallback)
+  // ✅ College dropdown options (fallback)
   const collegeOptions = [
     "Thapar University",
     "Manipal University Jaipur",
@@ -25,7 +26,7 @@ function Signup() {
     "IIT Ropar",
   ];
 
-  // Email domain → college mapping
+  // ✅ Email domain → college mapping
   const domainToCollege = {
     "thapar.edu": "Thapar University",
     "muj.manipal.edu": "Manipal University Jaipur",
@@ -33,22 +34,57 @@ function Signup() {
     "iitrpr.ac.in": "IIT Ropar",
   };
 
-  // Handle email input (auto-detect college)
+  // ✅ Hostel data grouped by college
+  const collegeHostels = {
+    "Thapar University": [
+      "Agira Hall",
+      "Ambaram Hall",
+      "Amritam Hall",
+      "Ananta Hall",
+      "Anantam Hall",
+      "Dhriti Hall",
+      "Neeram Hall",
+      "Prithvi Hall",
+      "Tejas Hall",
+      "Vahni Hall",
+      "Viyat Hall",
+      "Vyan Hall",
+      "Vyom Hall",
+    ],
+    "Manipal University Jaipur": [
+      "Good Hostel Space (GHS)",
+     
+    ],
+    "NIT Jalandhar": ["Aryabhatta Hostel", "Tagore Hostel"],
+    "IIT Ropar": ["Satluj Hostel", "Beas Hostel"],
+  };
+
+  // ✅ Handle email input → auto-detect college & hostel list
   const handleEmailChange = (e) => {
     const inputEmail = e.target.value;
     setEmail(inputEmail);
 
     const domain = inputEmail.split("@")[1];
     if (domain && domainToCollege[domain]) {
-      setCollege(domainToCollege[domain]);
-      setAutoDetected(true); // mark as auto-detected
+      const detectedCollege = domainToCollege[domain];
+      setCollege(detectedCollege);
+      setAutoDetected(true);
+      setHostelOptions(collegeHostels[detectedCollege] || []); // set hostel list
     } else {
       setCollege("");
       setAutoDetected(false);
+      setHostelOptions([]); // reset hostel list
     }
   };
 
-  // Handle Signup Submit
+  // ✅ Handle manual college change (if user selects manually)
+  const handleCollegeChange = (e) => {
+    const selectedCollege = e.target.value;
+    setCollege(selectedCollege);
+    setHostelOptions(collegeHostels[selectedCollege] || []);
+  };
+
+  // ✅ Handle Signup Submit
   const handleSignup = async (e) => {
     e.preventDefault();
 
@@ -167,7 +203,7 @@ function Signup() {
                   ) : (
                     <select
                       value={college}
-                      onChange={(e) => setCollege(e.target.value)}
+                      onChange={handleCollegeChange}
                       className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none text-gray-700"
                       required
                     >
@@ -183,17 +219,35 @@ function Signup() {
                   )}
                 </label>
 
-                {/* Hostel */}
+                {/* ✅ Hostel Dropdown (based on college) */}
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">Hostel</p>
-                  <input
-                    type="text"
-                    value={hostel}
-                    onChange={(e) => setHostel(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
-                    placeholder="Enter your hostel name"
-                    required
-                  />
+                  {hostelOptions.length > 0 ? (
+                    <select
+                      value={hostel}
+                      onChange={(e) => setHostel(e.target.value)}
+                      className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none text-gray-700"
+                      required
+                    >
+                      <option value="" disabled>
+                        Select your Hostel
+                      </option>
+                      {hostelOptions.map((h, index) => (
+                        <option key={index} value={h}>
+                          {h}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={hostel}
+                      onChange={(e) => setHostel(e.target.value)}
+                      className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
+                      placeholder="Enter your hostel name"
+                      required
+                    />
+                  )}
                 </label>
 
                 {/* Password */}
