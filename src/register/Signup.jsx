@@ -100,7 +100,7 @@ function Signup() {
       setAutoDetected(false);
       setHostelOptions([]);
       setEmailError(
-        "Please use your official college email (personal/public providers like Gmail, Yahoo, Outlook are not allowed)."
+        "Please use your official college email."
       );
       return;
     }
