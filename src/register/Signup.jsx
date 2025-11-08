@@ -8,15 +8,16 @@ function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [college, setCollege] = useState("");
+  const [autoDetected, setAutoDetected] = useState(false); // NEW: track auto-fill
   const [hostel, setHostel] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Backend URL (switch automatically between local & deployed)
   const backendURL = "https://relayy-backend-9war.onrender.com";
 
+  // College dropdown options (fallback)
   const collegeOptions = [
     "Thapar University",
     "Manipal University Jaipur",
@@ -24,7 +25,30 @@ function Signup() {
     "IIT Ropar",
   ];
 
-  // ---------------- HANDLE SIGNUP ----------------
+  // Email domain → college mapping
+  const domainToCollege = {
+    "thapar.edu": "Thapar University",
+    "muj.manipal.edu": "Manipal University Jaipur",
+    "nitj.ac.in": "NIT Jalandhar",
+    "iitrpr.ac.in": "IIT Ropar",
+  };
+
+  // Handle email input (auto-detect college)
+  const handleEmailChange = (e) => {
+    const inputEmail = e.target.value;
+    setEmail(inputEmail);
+
+    const domain = inputEmail.split("@")[1];
+    if (domain && domainToCollege[domain]) {
+      setCollege(domainToCollege[domain]);
+      setAutoDetected(true); // mark as auto-detected
+    } else {
+      setCollege("");
+      setAutoDetected(false);
+    }
+  };
+
+  // Handle Signup Submit
   const handleSignup = async (e) => {
     e.preventDefault();
 
@@ -123,7 +147,7 @@ function Signup() {
                   <input
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={handleEmailChange}
                     className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
                     placeholder="Enter your college email"
                     required
@@ -133,21 +157,30 @@ function Signup() {
                 {/* College */}
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">College</p>
-                  <select
-                    value={college}
-                    onChange={(e) => setCollege(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none text-gray-700"
-                    required
-                  >
-                    <option value="" disabled>
-                      Select your College
-                    </option>
-                    {collegeOptions.map((col, index) => (
-                      <option key={index} value={col}>
-                        {col}
+                  {autoDetected ? (
+                    <input
+                      type="text"
+                      value={college}
+                      readOnly
+                      className="rounded-xl h-14 p-4 bg-emerald-50 text-gray-700 border border-emerald-200 cursor-not-allowed"
+                    />
+                  ) : (
+                    <select
+                      value={college}
+                      onChange={(e) => setCollege(e.target.value)}
+                      className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none text-gray-700"
+                      required
+                    >
+                      <option value="" disabled>
+                        Select your College
                       </option>
-                    ))}
-                  </select>
+                      {collegeOptions.map((col, index) => (
+                        <option key={index} value={col}>
+                          {col}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </label>
 
                 {/* Hostel */}
