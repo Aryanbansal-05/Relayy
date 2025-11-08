@@ -14,6 +14,7 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [emailError, setEmailError] = useState(""); // <-- new state for validation message
   const navigate = useNavigate();
 
   const backendURL = "https://relayy-backend-9war.onrender.com";
@@ -53,27 +54,70 @@ function Signup() {
     ],
     "Manipal University Jaipur": [
       "Good Hostel Space (GHS)",
-     
     ],
     "NIT Jalandhar": ["Aryabhatta Hostel", "Tagore Hostel"],
     "IIT Ropar": ["Satluj Hostel", "Beas Hostel"],
   };
 
-  // ✅ Handle email input → auto-detect college & hostel list
+  // ---------- PUBLIC EMAIL PROVIDERS (denylist) ----------
+  // Expand this list to block more public domains if needed
+  const publicEmailDomains = new Set([
+    "gmail.com",
+    "googlemail.com",
+    "yahoo.com",
+    "yahoo.co.in",
+    "hotmail.com",
+    "outlook.com",
+    "live.com",
+    "icloud.com",
+    "aol.com",
+    "protonmail.com",
+    "gmx.com",
+    "zoho.com",
+    "mail.com",
+    "msn.com",
+    // add more as required
+  ]);
+
+  // helper: extract domain safely and normalize
+  const extractDomain = (emailStr) => {
+    if (!emailStr || typeof emailStr !== "string") return "";
+    const parts = emailStr.trim().toLowerCase().split("@");
+    return parts.length === 2 ? parts[1] : "";
+  };
+
+  // ✅ Handle email input → auto-detect college & hostel list + public-domain blocking
   const handleEmailChange = (e) => {
     const inputEmail = e.target.value;
     setEmail(inputEmail);
+    setEmailError(""); // reset first
 
-    const domain = inputEmail.split("@")[1];
+    const domain = extractDomain(inputEmail);
+
+    // If domain is a known public provider, show error and do NOT auto-detect college
+    if (domain && publicEmailDomains.has(domain)) {
+      setCollege("");
+      setAutoDetected(false);
+      setHostelOptions([]);
+      setEmailError(
+        "Please use your official college email (personal/public providers like Gmail, Yahoo, Outlook are not allowed)."
+      );
+      return;
+    }
+
+    // If domain maps to a college, auto-detect
     if (domain && domainToCollege[domain]) {
       const detectedCollege = domainToCollege[domain];
       setCollege(detectedCollege);
       setAutoDetected(true);
-      setHostelOptions(collegeHostels[detectedCollege] || []); // set hostel list
+      setHostelOptions(collegeHostels[detectedCollege] || []);
+      setEmailError("");
     } else {
+      // allow other (non-public) custom domains (e.g., college domains not in mapping)
       setCollege("");
       setAutoDetected(false);
-      setHostelOptions([]); // reset hostel list
+      setHostelOptions([]);
+      setEmailError("");
     }
   };
 
@@ -84,13 +128,31 @@ function Signup() {
     setHostelOptions(collegeHostels[selectedCollege] || []);
   };
 
-  // ✅ Handle Signup Submit
+  // ✅ Handle Signup Submit (extra check for public domains)
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    const domain = extractDomain(email);
+
+    // block submission if public domain
+    if (domain && publicEmailDomains.has(domain)) {
+      setEmailError(
+        "Signup blocked: please use your official college email (Gmail/Yahoo/Outlook/etc. are not allowed)."
+      );
+      return;
+    }
 
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
+    }
+
+    // additional client-side requirement: if college field is required ensure it's set
+    if (!college) {
+      // If you want to force users to choose a college from the select when not auto-detected:
+      // alert("Please select or enter your college.");
+      // return;
+      // For now we just proceed (your backend should re-check)
     }
 
     setIsLoading(true);
@@ -102,7 +164,7 @@ function Signup() {
       );
 
       alert(res.data.message || "OTP sent to your email. Please verify.");
-      navigate(`/verify-otp?email=${email}`);
+      navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
     } catch (err) {
       const backendMessage =
         err.response?.data?.message ||
@@ -160,10 +222,7 @@ function Signup() {
               </div>
 
               {/* FORM */}
-              <form
-                onSubmit={handleSignup}
-                className="flex flex-col gap-4 py-6"
-              >
+              <form onSubmit={handleSignup} className="flex flex-col gap-4 py-6">
                 {/* Username */}
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">Username</p>
@@ -188,6 +247,10 @@ function Signup() {
                     placeholder="Enter your college email"
                     required
                   />
+                  {/* Inline validation message */}
+                  {emailError && (
+                    <p className="text-sm text-red-600 pt-2">{emailError}</p>
+                  )}
                 </label>
 
                 {/* College */}
@@ -219,7 +282,7 @@ function Signup() {
                   )}
                 </label>
 
-                {/* ✅ Hostel Dropdown (based on college) */}
+                {/* Hostel */}
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">Hostel</p>
                   {hostelOptions.length > 0 ? (
@@ -281,8 +344,10 @@ function Signup() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  disabled={isLoading}
-                  className="h-12 rounded-xl text-white font-bold bg-gradient-to-r from-emerald-700 to-emerald-600 hover:opacity-90 transition"
+                  disabled={isLoading || Boolean(emailError)}
+                  className={`h-12 rounded-xl text-white font-bold bg-gradient-to-r from-emerald-700 to-emerald-600 hover:opacity-90 transition ${
+                    emailError ? "opacity-60 cursor-not-allowed" : ""
+                  }`}
                 >
                   {isLoading ? "Creating Account..." : "Create Account"}
                 </button>
