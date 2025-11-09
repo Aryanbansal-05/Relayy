@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 
 // --- Static data (move to a config file later if you want) ---
-const categories = ['Electronics', 'Books', 'Furniture', 'Clothing', 'Hobbies'];
+const categories = ['Electronics', 'Books', 'Furniture', 'Clothing', 'Others'];
 const prices = [
   { value: 'under-100', label: 'Under ₹100' },
   { value: '100-500',   label: '₹100 - ₹500' },
