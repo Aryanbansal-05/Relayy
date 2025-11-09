@@ -2,35 +2,88 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+// 🔑 NEW: Helper function to decode JWT payload (Needed to get the user's email/domain)
+function decodeJwtPayload(token) {
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
+  } catch {
+    return null;
+  }
+}
+
 const Related = ({ category, currentProductId }) => {
   const navigate = useNavigate();
-  
-  // --- THIS LOGIC WAS MISSING ---
+
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🔑 NEW: State to store the current user's college domain
+  const [userDomain, setUserDomain] = useState(null);
+
   const backendURL = "https://relayy-backend-9war.onrender.com";
 
+  // 🔑 NEW: useEffect to get user email and domain from local storage/token
   useEffect(() => {
+    let email = null;
+    try {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser?.email) email = storedUser.email;
+    } catch {}
+    if (!email) {
+        const token = localStorage.getItem("token");
+        if (token) {
+            const payload = decodeJwtPayload(token);
+            if (payload?.email) email = payload.email;
+        }
+    }
+    if (!email) email = localStorage.getItem("userEmail");
+
+    if (email) {
+        // Extract the domain (e.g., 'college.edu')
+        const domain = email.split("@")[1]?.toLowerCase();
+        setUserDomain(domain);
+    }
+  }, []); // Runs only on mount to set the domain
+
+  // 1. Fetch products and apply filters (MODIFIED useEffect)
+  useEffect(() => {
+    // We must wait for the userDomain to be set before fetching/filtering
+    if (!category || !userDomain) return;
+
     const fetchRelatedProducts = async () => {
-      if (!category) return;
       try {
         setLoading(true);
+        // Step 1: Fetch all products (Still inefficient, but matches your current approach)
         const res = await axios.get(`${backendURL}/api/v1/products`);
         const allProducts = Array.isArray(res.data)
           ? res.data
           : res.data.products || [];
 
-        const filtered = allProducts
+        // Step 2: Apply ALL filters, starting with the MANDATORY Campus Filter
+        const filteredByCampusAndCategory = allProducts
           .filter(
             (p) =>
+              // 🔑 NEW: Mandatory Campus Filter
+              p.userEmail && 
+              p.userEmail.split("@")[1]?.toLowerCase() === userDomain &&
+              // Existing Category Filter
               p.category === category &&
+              // Existing Exclusion Filter
               p._id !== currentProductId &&
               p.imageUrls?.length > 0
           )
+          // Limit to 4 items
           .slice(0, 4);
 
-        setRelatedProducts(filtered);
+        setRelatedProducts(filteredByCampusAndCategory);
       } catch (err) {
         console.error("❌ Error fetching related products:", err);
       } finally {
@@ -39,14 +92,14 @@ const Related = ({ category, currentProductId }) => {
     };
 
     fetchRelatedProducts();
-  }, [category, currentProductId, backendURL]);
+    // ⚠️ IMPORTANT: Add userDomain to the dependency array
+  }, [category, currentProductId, backendURL, userDomain]); 
 
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
   };
-  // --- END OF MISSING LOGIC ---
 
-  // --- LOADING / EMPTY STATES ---
+  // --- LOADING / EMPTY STATES (Existing logic) ---
   if (loading)
     return (
       <div className="max-w-6xl mx-auto px-4">
@@ -58,7 +111,7 @@ const Related = ({ category, currentProductId }) => {
     return null; // Don't show the section if there are no related items
   }
 
-  // --- Main Related Component ---
+  // --- Main Related Component (Existing JSX) ---
   return (
     <section className="max-w-6xl mx-auto px-4 font-sans">
       <h2 className="text-3xl font-bold text-gray-900 mb-6">
