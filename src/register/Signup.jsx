@@ -13,11 +13,13 @@ function Signup() {
   const [hostelOptions, setHostelOptions] = useState([]); // ✅ Dynamic hostel list
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [mobile, setMobile] = useState(""); // <-- new
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [mobileError, setMobileError] = useState(""); // <-- new
   const navigate = useNavigate();
 
-  const backendURL = "https://relayy-backend-9war.onrender.com";
+  const backendURL = "http://localhost:8000";
 
   // ✅ College dropdown options (fallback)
   const collegeOptions = [
@@ -64,6 +66,14 @@ function Signup() {
     return parts.length === 2 ? parts[1] : "";
   };
 
+  // simple mobile validator (10 digits)
+  const validateMobile = (m) => {
+    if (!m) return ""; // allow empty (optional)
+    const digits = String(m).trim();
+    if (!/^[0-9]{10}$/.test(digits)) return "Enter a valid 10-digit mobile number.";
+    return "";
+  };
+
   // Handle email input → must be one of allowed domains
   const handleEmailChange = (e) => {
     const inputEmail = e.target.value;
@@ -87,20 +97,27 @@ function Signup() {
       if (inputEmail.trim() === "") {
         setEmailError("");
       } else {
-        setEmailError(
-          "Only official college emails are allowed."
-        );
+        setEmailError("Only official college emails are allowed.");
       }
     }
   };
 
   // Handle manual college change (if you still want user to pick college)
-  // Note: final email/domain must match this selected college on submit.
   const handleCollegeChange = (e) => {
     const selectedCollege = e.target.value;
     setCollege(selectedCollege);
     setHostelOptions(collegeHostels[selectedCollege] || []);
     setAutoDetected(false); // since user manually selected
+  };
+
+  // Mobile change handler + validation
+  const handleMobileChange = (e) => {
+    const val = e.target.value;
+    // Allow only digits in input (helps UX)
+    if (val && !/^[0-9]*$/.test(val)) return;
+    setMobile(val);
+    const err = validateMobile(val);
+    setMobileError(err);
   };
 
   // Handle Signup Submit (strict domain check)
@@ -117,10 +134,9 @@ function Signup() {
       return;
     }
 
-    // Extra: ensure selected college matches the email's college
+    // Ensure selected college matches the email's college
     const emailCollege = domainToCollege[domain];
     if (college !== emailCollege) {
-      // If college wasn't auto-detected because user changed it, force match
       setEmailError(
         `Email domain belongs to "${emailCollege}". Please select that college or use the corresponding college email.`
       );
@@ -132,11 +148,18 @@ function Signup() {
       return;
     }
 
+    // Validate mobile one more time before sending
+    const finalMobileErr = validateMobile(mobile);
+    if (finalMobileErr) {
+      setMobileError(finalMobileErr);
+      return;
+    }
+
     setIsLoading(true);
     try {
       const res = await axios.post(
         `${backendURL}/api/v1/users/signup`,
-        { username, email, college, hostel, password },
+        { username, email, college, hostel, password, mobile },
         { withCredentials: true }
       );
 
@@ -229,6 +252,23 @@ function Signup() {
                     <p className="text-sm text-red-600 pt-2">{emailError}</p>
                   )}
                 </label>
+                
+                  {/* Mobile */}
+                <label className="flex flex-col">
+                  <p className="text-base font-medium pb-2">Mobile</p>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={10}
+                    value={mobile}
+                    onChange={handleMobileChange}
+                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
+                    placeholder="Enter 10-digit mobile number"
+                  />
+                  {mobileError && (
+                    <p className="text-sm text-red-600 pt-2">{mobileError}</p>
+                  )}
+                </label>
 
                 {/* College */}
                 <label className="flex flex-col">
@@ -290,6 +330,7 @@ function Signup() {
                   )}
                 </label>
 
+                
                 {/* Password */}
                 <label className="flex flex-col">
                   <p className="text-base font-medium pb-2">Password</p>
@@ -321,9 +362,9 @@ function Signup() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  disabled={isLoading || Boolean(emailError)}
+                  disabled={isLoading || Boolean(emailError) || Boolean(mobileError)}
                   className={`h-12 rounded-xl text-white font-bold bg-gradient-to-r from-emerald-700 to-emerald-600 hover:opacity-90 transition ${
-                    emailError ? "opacity-60 cursor-not-allowed" : ""
+                    emailError || mobileError ? "opacity-60 cursor-not-allowed" : ""
                   }`}
                 >
                   {isLoading ? "Creating Account..." : "Create Account"}

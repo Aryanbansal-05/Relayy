@@ -89,20 +89,31 @@ export default function ProductInfo({ product, currentUser }) {
       </div>
 
       {/* --- Seller Info --- */}
-      <div className="bg-white rounded-2xl shadow-lg p-4 flex flex-col sm:flex-row justify-between sm:items-center border border-gray-100">
-        <div className="flex items-center mb-4 sm:mb-0">
-          <img
-            src={`https://ui-avatars.com/api/?name=${product.username || "Seller"}&background=random`}
-            alt={product.username || "Seller"}
-            className="w-12 h-12 rounded-full mr-4"
-          />
-          <div>
-            <p className="text-lg font-semibold text-gray-900">{product.username}</p>
-            <p className="text-sm text-gray-800">Sold By</p>
-          </div>
-        </div>
-        <StarRating rating={4.5} />
-      </div>
+      {/* --- Seller Info --- */}
+<div className="bg-white rounded-2xl shadow-lg p-4 flex flex-col sm:flex-row justify-between sm:items-center border border-gray-100">
+  <div className="flex items-center mb-4 sm:mb-0">
+    <img
+      src={`https://ui-avatars.com/api/?name=${product.username || "Seller"}&background=random`}
+      alt={product.username || "Seller"}
+      className="w-12 h-12 rounded-full mr-4"
+    />
+    <div>
+       <p className="text-sm text-gray-500">Sold By</p>
+      <p className="text-lg font-semibold text-gray-900">{product.username}</p>
+        
+      {/* ✅ Added below: college email, hostel, and mobile */}
+      {product.userEmail && (
+        <p className="text-sm text-gray-700">{product.userEmail}</p>
+      )}
+      {product.userHostel && (
+        <p className="text-sm text-gray-700">{product.userHostel}</p>
+      )}
+    </div>
+  </div>
+
+  <StarRating rating={4.5} />
+</div>
+
 
       {/* --- Action Buttons --- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
