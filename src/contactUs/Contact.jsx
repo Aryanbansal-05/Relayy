@@ -66,11 +66,11 @@ const Contact = () => {
         <p className="text-sm text-gray-700">
           Or email us directly at
           <a
-            href="mailto:support@relayy.com"
+            href="mailto:support@relayy.shop"
             // Use emerald-700 for links, per your theme file
             className="font-semibold text-emerald-700 hover:underline ml-1"
           >
-            support@relayy.com
+            support@relayy.shop
           </a>
         </p>
       </div>
