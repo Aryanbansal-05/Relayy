@@ -8,7 +8,7 @@ import About from "./AboutUs/About";
 import Footer from "./Footer";
 import { ReactLenis } from "lenis/react";
 import Faqs from "./faqs/Faqs";
-import Forgot from "./Forgot";
+import Forgot from "./ForgotPass/Forgot";
 import Login from "./register/Login";
 import Signup from "./register/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -24,6 +24,9 @@ import VerifyOtp from "./register/VerifyOtp";
 import EditProfile from "./Profile/EditProfile";
 import RelayyInbox from "./components/RelayyInbox";
 import UserListPage from "./components/UserListPage";
+import ResetPassword from "./ForgotPass/ResetPass";
+import ForgotPassword from "./ForgotPass/Forgot";
+import VerifyResetOtp from "./ForgotPass/verify_reset";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com/api/v1";
@@ -40,6 +43,10 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot" element={<Forgot />} />
           <Route path="/verify-otp" element={<VerifyOtp />} />
+          {/* Forgot Password Flow */}
+        <Route path="/forgot-password" element={<ForgotPassword/>} />
+        <Route path="/verify-reset-otp" element={<VerifyResetOtp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
           {/* Protected routes */}
           <Route
             path="/home"
