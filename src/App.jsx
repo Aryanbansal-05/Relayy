@@ -27,6 +27,7 @@ import UserListPage from "./components/UserListPage";
 import ResetPassword from "./ForgotPass/ResetPass";
 import ForgotPassword from "./ForgotPass/Forgot";
 import VerifyResetOtp from "./ForgotPass/verify_reset";
+import PricePredictor from "./Profile/PricePredictor";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "https://relayy-backend-9war.onrender.com/api/v1";
@@ -47,6 +48,8 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword/>} />
         <Route path="/verify-reset-otp" element={<VerifyResetOtp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/price-predictor" element={<ProtectedRoute><PricePredictor /></ProtectedRoute>} />
+
           {/* Protected routes */}
           <Route
             path="/home"
