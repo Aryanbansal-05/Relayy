@@ -28,14 +28,11 @@ function NavbarLanding() {
         <a href="/" className="hover:text-emerald-600 transition-colors">
           Home
         </a>
-        <a href="#" className="hover:text-emerald-600 transition-colors">
+        <a href="/about" className="hover:text-emerald-600 transition-colors">
           About Us
         </a>
-        <a href="#" className="hover:text-emerald-600 transition-colors">
-          Support
-        </a>
-        <a href="#" className="hover:text-emerald-600 transition-colors">
-          FAQs
+        <a href="/contact" className="hover:text-emerald-600 transition-colors">
+          Contact Us
         </a>
       </nav>
 
@@ -71,32 +68,25 @@ function NavbarLanding() {
         <div className="absolute top-0 left-0 right-0 z-10 bg-white shadow-lg md:hidden pt-20">
           <nav className="flex flex-col p-6 space-y-4">
             <a
-              href="#"
+              href="/"
               className="font-medium text-emerald-800 hover:text-emerald-600"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Products
+              Home
             </a>
             <a
-              href="#"
+              href="/about"
               className="font-medium text-emerald-800 hover:text-emerald-600"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Features
+              About Us
             </a>
             <a
-              href="#"
+              href="/contact"
               className="font-medium text-emerald-800 hover:text-emerald-600"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Pricing
-            </a>
-            <a
-              href="#"
-              className="font-medium text-emerald-800 hover:text-emerald-600"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Support
+              Contact Us
             </a>
             <hr className="border-emerald-200" />
             {/* <div className="flex flex-col space-y-3">
