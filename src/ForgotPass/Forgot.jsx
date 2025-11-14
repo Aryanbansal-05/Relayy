@@ -13,7 +13,7 @@ const MessageToast = ({ message, isError, onClose }) => {
     const bgColor = isError ? "bg-red-500" : "bg-emerald-600";
 
     return (
-        <div className={`fixed bottom-6 right-6 p-4 rounded-xl  text-white shadow-xl max-w-sm ${bgColor} z-50 transition-all duration-300 ease-in-out transform`}>
+        <div className={`fixed bottom-6 right-6 p-4 rounded-xl text-white shadow-xl max-w-sm ${bgColor} z-50 transition-all duration-300 ease-in-out transform`}>
             <div className="flex items-start">
                 <Icon className="w-6 h-6 mr-3 mt-0.5" />
                 <div className="flex-1">
@@ -51,12 +51,11 @@ const ForgotPassword = () => {
         setIsLoading(true);
 
         try {
-            // Simulated API call - replace with actual axios call in a real environment
-            // const res = await axios.post(`${backendURL}/api/v1/users/forgot-password`, { email });
-            
-            // Simulating a successful response for demonstration
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            const res = { data: { message: "OTP sent successfully to your email." } };
+            const res = await axios.post(
+    `${backendURL}/api/v1/users/forgot-password`,
+    { email }
+);
+
 
             setMessage(res.data.message || "OTP sent to your email for password reset");
             setIsError(false);
@@ -68,6 +67,7 @@ const ForgotPassword = () => {
 
         } catch (err) {
             console.error("Forgot Password Error:", err);
+            console.log("FULL ERROR --->", err.response); 
             const errorMessage = err.response?.data?.message || "Failed to send OTP. Please try again later.";
             setMessage(errorMessage);
             setIsError(true);
@@ -77,7 +77,7 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-emerald-50">
+        <div className="min-h-screen flex flex-col bg-gray-50">
             <NavbarLanding />
             
             {/* Custom Message Toast */}
