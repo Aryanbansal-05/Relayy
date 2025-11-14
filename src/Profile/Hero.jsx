@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
-import { Loader2, Edit, LogOut, Star, School, MapPin, Phone } from "lucide-react"; // <-- Added Phone icon
+import { Loader2, Edit, LogOut, Star, School, MapPin, Phone } from "lucide-react";
 
 const Hero = () => {
   const [user, setUser] = useState(null);
   const [myAds, setMyAds] = useState([]);
-  const [offersMade, setOffersMade] = useState([]); // <-- State for your offers
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("items"); // 'items' or 'offers'
+  const [loading, setLoading] = useState(true); // Retain loading state
   const navigate = useNavigate();
 
   const backendURL = "https://relayy-backend-9war.onrender.com";
@@ -23,15 +21,11 @@ const Hero = () => {
         });
         setUser(userRes.data.user);
 
-        // 2. Fetch user's ads
+        // 2. Fetch user's ads (Items for Sale)
         const adsRes = await axios.get(`${backendURL}/api/v1/products/my`, {
           withCredentials: true,
         });
         setMyAds(adsRes.data);
-
-        // (Optional) Fetch user's made offers later
-        // const offersRes = await axios.get(`${backendURL}/api/v1/offers/my`, { withCredentials: true });
-        // setOffersMade(offersRes.data);
       } catch (err) {
         console.error("Failed to fetch profile data:", err);
         navigate("/login");
@@ -52,7 +46,8 @@ const Hero = () => {
         { withCredentials: true }
       );
       localStorage.removeItem("token");
-      window.location.href = "/";
+      // Use navigate("/") instead of window.location.href for React Router
+      navigate("/");
     } catch (err) {
       console.error("Logout failed:", err);
     }
@@ -171,95 +166,54 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* --- RIGHT COLUMN (TABS) --- */}
+          {/* --- RIGHT COLUMN (Items for Sale Content) --- */}
           <div className="lg:col-span-2">
-            {/* Tabs */}
-            <div className="flex border-b border-gray-200">
-              <button
-                onClick={() => setActiveTab("items")}
-                className={`py-4 px-6 font-semibold text-lg transition-colors ${
-                  activeTab === "items"
-                    ? "text-emerald-600 border-b-4 border-emerald-600"
-                    : "text-gray-500 hover:bg-emerald-50"
-                }`}
-              >
+            
+            {/* Single Title/Tab */}
+            <div className="border-b border-gray-200">
+              <div className="py-4 px-6 font-semibold text-lg text-emerald-600 border-b-4 border-emerald-600 inline-block">
                 Items for Sale ({myAds.length})
-              </button>
-              <button
-                onClick={() => setActiveTab("offers")}
-                className={`py-4 px-6 font-semibold text-lg transition-colors ${
-                  activeTab === "offers"
-                    ? "text-emerald-600 border-b-4 border-emerald-600"
-                    : "text-gray-500 hover:bg-emerald-50"
-                }`}
-              >
-                Offers Made ({offersMade.length})
-              </button>
+              </div>
             </div>
 
-            {/* Tab Content */}
+            {/* Content for Items for Sale */}
             <div className="p-6">
-              {/* Items Tab */}
-              {activeTab === "items" && (
-                <div>
-                  {myAds.length === 0 ? (
-                    <p className="text-gray-600">
-                      You haven’t listed any items for sale yet.
-                    </p>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {myAds.map((ad) => (
-                        <div
-                          key={ad._id}
-                          onClick={() => navigate(`/Myproduct/${ad._id}`)}
-                          className="bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 cursor-pointer"
-                        >
-                          <img
-                            src={
-                              ad.imageUrls?.[0] ||
-                              "https://placehold.co/300x300/e2e8f0/64748b?text=No+Image"
-                            }
-                            alt={ad.title}
-                            className="h-48 w-full object-cover"
-                          />
-                          <div className="p-4">
-                            <h5 className="text-lg font-bold text-gray-900 truncate">
-                              {ad.title}
-                            </h5>
-                            <p className="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-emerald-800 mt-1">
-                              ₹{ad.price}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Offers Tab */}
-              {activeTab === "offers" && (
-                <div>
-                  {offersMade.length === 0 ? (
-                    <div className="text-center py-10">
-                      <p className="text-gray-600">
-                        You haven't made any offers yet.
-                      </p>
-                      <button
-                        onClick={() => navigate("/all-products")}
-                        className="mt-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-6 py-2 rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-800 transition shadow-md transform hover:scale-105"
+              <div>
+                {myAds.length === 0 ? (
+                  <p className="text-gray-600">
+                    You haven’t listed any items for sale yet.
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {myAds.map((ad) => (
+                      <div
+                        key={ad._id}
+                        onClick={() => navigate(`/Myproduct/${ad._id}`)}
+                        className="bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 cursor-pointer"
                       >
-                        Browse Items
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {/* Map offers here when ready */}
-                    </div>
-                  )}
-                </div>
-              )}
+                        <img
+                          src={
+                            ad.imageUrls?.[0] ||
+                            "https://placehold.co/300x300/e2e8f0/64748b?text=No+Image"
+                          }
+                          alt={ad.title}
+                          className="h-48 w-full object-cover"
+                        />
+                        <div className="p-4">
+                          <h5 className="text-lg font-bold text-gray-900 truncate">
+                            {ad.title}
+                          </h5>
+                          <p className="text-lg font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-emerald-800 mt-1">
+                            ₹{ad.price}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+            
           </div>
         </div>
       </div>
