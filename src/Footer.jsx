@@ -1,181 +1,206 @@
-import React from "react";
-
-import { ArrowRight } from "lucide-react";
-
+import React, { useState } from "react";
+import { Mail } from "lucide-react";
 import relayyLogo from "./relayy(logo).svg";
 
-
-
 function Footer() {
+  const [openSection, setOpenSection] = useState(null);
+
+  const toggle = (section) => {
+    setOpenSection(openSection === section ? null : section);
+  };
 
   return (
-
     <footer
-
-      className="gradient-bg text-emerald-100 shadow-inner font-josefin"
-
+      className="w-full text-emerald-100 font-josefin"
       style={{
-
         background:
-
           "linear-gradient(180deg, #065F46 0%, #047857 50%, #064E3B 100%)",
-
         boxShadow: "inset 0 2px 10px rgba(0,0,0,0.3)",
-
       }}
-
     >
+      <div className="container mx-auto px-6 py-8 md:px-20 md:py-12">
 
-      <div className="container mx-auto px-8 md:px-20 py-12">
+        {/* -------------------- DESKTOP FOOTER (unchanged) -------------------- */}
+        <div className="hidden md:grid grid-cols-2 gap-10 border-b border-emerald-700/40 pb-10">
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-emerald-700/50 pb-12">
+          {/* COLUMN 1 */}
+          <div className="flex flex-col gap-10">
 
-          {/* Logo + About */}
-
-          <div>
-
-            <div className="flex items-center gap-2 mb-4">
-
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
-
-                <img src={relayyLogo} alt="Relayy Logo" className="w-12 h-12" />
-
+            {/* BRAND */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
+                  <img src={relayyLogo} className="w-12 h-12" alt="logo" />
+                </div>
+                <h2 className="text-2xl font-bold text-white tracking-tight">
+                  RELAYY
+                </h2>
               </div>
 
-              <h2 className="text-2xl font-bold tracking-tight text-white">
+              <p className="text-sm text-emerald-100/90 leading-relaxed">
+                The campus marketplace for sustainable living. Buy, sell, and reduce waste within your institution’s community.
+              </p>
 
-                RELAYY
-
-              </h2>
-
+              <a
+                href="/signup"
+                className="inline-flex px-6 py-2 mt-6 border border-emerald-300 text-sm rounded-md shadow-sm text-emerald-100 hover:bg-emerald-300 hover:text-emerald-900 transition"
+              >
+                GET STARTED
+              </a>
             </div>
 
-            <p className="text-sm text-emerald-100/90 leading-relaxed">
+            {/* COMPANY */}
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-white mb-4">
+                COMPANY
+              </h3>
+              <ul className="space-y-2 text-base text-emerald-200">
+                <li><a href="/about" className="hover:text-white">About Us</a></li>
+                <li><a href="/contact" className="hover:text-white">Contact Us</a></li>
+              </ul>
+            </div>
 
-              Lorem ipsum dolor sit amet consectetur adipiscing elit aliquam mauris sed ma
+          </div>
 
+          {/* COLUMN 2 — Newsletter */}
+          <div>
+            <h3 className="text-sm font-semibold uppercase text-white tracking-wide mb-4">
+              STAY UPDATED
+            </h3>
+
+            <p className="text-sm text-emerald-100/90 leading-snug mb-3">
+              Get the latest news and updates delivered straight to your inbox.
             </p>
 
-            <button  className="mt-6 px-6 py-2 border border-emerald-400 text-sm flex items-center gap-2 text-emerald-100 hover:bg-emerald-400 hover:text-emerald-900 transition rounded-md shadow-sm">
+            <div className="space-y-3 max-w-sm">
 
-              GET STARTED <ArrowRight size={16} />
+              <div className="relative">
+                <Mail
+                  size={16}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500"
+                />
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="w-full py-2 pl-10 pr-4 rounded-md text-emerald-900 placeholder-emerald-600 focus:ring-emerald-400 focus:border-emerald-400"
+                />
+              </div>
 
+              <button className="w-full bg-emerald-400 text-emerald-900 font-semibold py-2 rounded-md hover:bg-emerald-300 transition shadow-md">
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* -------------------- MOBILE FOOTER (accordion) -------------------- */}
+        <div className="md:hidden border-b border-emerald-700/40 pb-8 space-y-4">
+
+          {/* BRAND SECTION */}
+          <div>
+            <button
+              className="flex justify-between items-center w-full py-3"
+              onClick={() => toggle("brand")}
+            >
+              <span className="font-semibold text-white text-base">About Relayy</span>
+              <span className="text-xl">{openSection === "brand" ? "−" : "+"}</span>
             </button>
 
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                openSection === "brand" ? "max-h-80" : "max-h-0"
+              }`}
+            >
+              <div className="pt-2">
+                <p className="text-sm text-emerald-100/90 leading-relaxed">
+                  The campus marketplace for sustainable living. Buy, sell, and reduce waste within your institution’s community.
+                </p>
+
+                <a
+                  href="/signup"
+                  className="inline-flex px-6 py-2 mt-4 border border-emerald-300 text-sm rounded-md shadow-sm text-emerald-100 hover:bg-emerald-300 hover:text-emerald-900 transition"
+                >
+                  GET STARTED
+                </a>
+              </div>
+            </div>
           </div>
 
-
-
-          {/* About Us */}
-
+          {/* COMPANY SECTION */}
           <div>
+            <button
+              className="flex justify-between items-center w-full py-3"
+              onClick={() => toggle("company")}
+            >
+              <span className="font-semibold text-white text-base">Company</span>
+              <span className="text-xl">{openSection === "company" ? "−" : "+"}</span>
+            </button>
 
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
-
-              ABOUT US
-
-            </h3>
-
-            <ul className="space-y-2 text-base text-emerald-200">
-
-              <li><a href="/mission" className="hover:text-white transition">Mission</a></li>
-
-              <li><a href="/team" className="hover:text-white transition">Our team</a></li>
-
-              <li><a href="/awards" className="hover:text-white transition">Awards</a></li>
-
-              <li><a href="/testimonials" className="hover:text-white transition">Testimonials</a></li>
-
-              <li><a href="/privacy" className="hover:text-white transition">Privacy policy</a></li>
-
-            </ul>
-
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                openSection === "company" ? "max-h-40" : "max-h-0"
+              }`}
+            >
+              <ul className="pt-2 space-y-2 text-base text-emerald-200">
+                <li><a href="/about" className="hover:text-white">About Us</a></li>
+                <li><a href="/contact" className="hover:text-white">Contact Us</a></li>
+              </ul>
+            </div>
           </div>
 
-
-
-          {/* Categories */}
-
+          {/* NEWSLETTER SECTION */}
           <div>
+            <button
+              className="flex justify-between items-center w-full py-3"
+              onClick={() => toggle("news")}
+            >
+              <span className="font-semibold text-white text-base">Stay Updated</span>
+              <span className="text-xl">{openSection === "news" ? "−" : "+"}</span>
+            </button>
 
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                openSection === "news" ? "max-h-96" : "max-h-0"
+              }`}
+            >
+              <div className="pt-2 max-w-sm">
 
-              CATEGORIES
+                <p className="text-sm text-emerald-100/90 leading-snug mb-3">
+                  Get updates delivered straight to your inbox.
+                </p>
 
-            </h3>
+                <div className="relative mb-3">
+                  <Mail
+                    size={16}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Your email address"
+                    className="w-full py-2 pl-10 pr-4 rounded-md text-emerald-900 placeholder-emerald-600 focus:ring-emerald-400 focus:border-emerald-400"
+                  />
+                </div>
 
-            <ul className="space-y-2 text-base text-emerald-200">
+                <button className="w-full bg-emerald-400 text-emerald-900 font-semibold py-2 rounded-md hover:bg-emerald-300 transition shadow-md">
+                  Subscribe
+                </button>
 
-              <li><a href="/electronics" className="hover:text-white transition">Electronics</a></li>
-
-              <li><a href="/books" className="hover:text-white transition">Books</a></li>
-
-              <li><a href="/clothes" className="hover:text-white transition">Furniture</a></li>
-
-              <li><a href="/shoes" className="hover:text-white transition">Clothing</a></li>
-
-              <li><a href="/other" className="hover:text-white transition">Other</a></li>
-
-            </ul>
-
-          </div>
-
-
-
-          {/* Pages */}
-
-          <div>
-
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
-
-              PAGES
-
-            </h3>
-
-            <ul className="space-y-2 text-base text-emerald-200">
-
-              <li><a href="/blog" className="hover:text-white transition">Blog</a></li>
-
-              <li><a href="/shop" className="hover:text-white transition">Browse shop</a></li>
-
-              <li><a href="/apps" className="hover:text-white transition">Mobile apps</a></li>
-
-              <li><a href="/elements" className="hover:text-white transition">Visual Composer Elements</a></li>
-
-              <li><a href="/woocommerce" className="hover:text-white transition">WooCommerce Pages</a></li>
-
-            </ul>
-
+              </div>
+            </div>
           </div>
 
         </div>
 
-
-
-        {/* Bottom Bar */}
-
-        <div className="mt-8 border-t border-emerald-700/50 pt-8 text-center text-sm text-emerald-200">
-
-          <p>
-
-            Copyright © 2025 Moon | All Rights Reserved |{" "}
-
-            <a href="/terms" className="hover:text-white underline transition">Terms and Conditions</a> |{" "}
-
-            <a href="/privacy" className="hover:text-white underline transition">Privacy Policy</a>
-
-          </p>
-
+        {/* ----------------- BOTTOM ----------------- */}
+        <div className="text-center text-xs text-emerald-200 mt-6 pt-6">
+          © 2025 Moon |
+          <a href="/terms" className="underline ml-1 hover:text-white">Terms</a> |
+          <a href="/privacy" className="underline ml-1 hover:text-white">Privacy</a>
         </div>
 
       </div>
-
     </footer>
-
   );
-
 }
-
-
 
 export default Footer;
