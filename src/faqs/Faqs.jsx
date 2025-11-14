@@ -68,7 +68,7 @@ function Faqs() {
       <Navbar />
       <Header title="FAQs" />
 
-      <section className="max-w-5xl mx-auto py-16 px-6 text-gray-700 font-josefin">
+      <section className="max-w-5xl mx-auto py-16 px-6 text-gray-700 ">
         <h2 className="text-3xl font-semibold mb-10 text-purple-800 text-center">
           Frequently Asked Questions
         </h2>

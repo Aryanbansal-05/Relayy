@@ -126,7 +126,7 @@ const handleSignup = async (e) => {
   };
 
   return (
-    <div className="font-josefin relative">
+    <div className=" relative">
       {/* ✅ Loader Overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-white/80 flex justify-center items-center z-50 transition-opacity duration-300">

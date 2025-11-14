@@ -77,7 +77,7 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="font-josefin min-h-screen flex flex-col bg-emerald-50">
+        <div className="min-h-screen flex flex-col bg-emerald-50">
             <NavbarLanding />
             
             {/* Custom Message Toast */}

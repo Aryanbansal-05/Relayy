@@ -11,7 +11,7 @@ function Footer() {
 
   return (
     <footer
-      className="w-full text-emerald-100 font-josefin"
+      className="w-full text-emerald-100 "
       style={{
         background:
           "linear-gradient(180deg, #065F46 0%, #047857 50%, #064E3B 100%)",

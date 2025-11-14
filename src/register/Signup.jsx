@@ -178,7 +178,7 @@ function Signup() {
 
   // ---------------- UI ----------------
   return (
-    <div className="font-josefin min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white">
       <NavbarLanding />
 
       {/* Loader */}

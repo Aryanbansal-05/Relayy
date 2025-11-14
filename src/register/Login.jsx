@@ -50,7 +50,7 @@ const [error, setError] = useState(null); // 3. Add error state
 
   return (
     
-    <div className="font-josefin min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white">
     <NavbarLanding />
       {isLoading && (
         <div className="fixed inset-0 bg-white/80 flex justify-center items-center z-50">
