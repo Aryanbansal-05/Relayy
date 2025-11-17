@@ -124,7 +124,7 @@ const EditProfile = () => {
 
   // Render
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4 sm:px-6 font-sans">
+    <div className="max-w-3xl mx-auto py-10 px-4 sm:px-6 ">
       <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100 p-8">
         <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
           <h1 className="text-3xl font-extrabold text-gray-900">

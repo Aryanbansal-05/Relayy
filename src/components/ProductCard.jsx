@@ -36,7 +36,7 @@ const ProductCard = ({ product }) => {
         
         {/* Using gray-800 (#1F2937) for secondary text */}
         <p className="text-sm text-gray-800 mb-4">
-          {product.hostel || "Campus Listing"} {/* Add hostel to your product data if possible */}
+          {product.hostel } {/* Add hostel to your product data if possible */}
         </p>
 
         <div className="mt-auto">

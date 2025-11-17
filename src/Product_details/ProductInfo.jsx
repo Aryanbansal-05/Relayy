@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import OfferModal from "./OfferModal"; // ✅ Import your working modal
+import RelayyChat from "../components/RelayyChat";
+import { useAuth } from "../Context/AuthContext";
+
+
 
 // --- SVG ICONS ---
 const MessageIcon = () => (
@@ -19,6 +23,7 @@ const StarRating = ({ rating = 4.5 }) => {
   const fullStars = Math.floor(rating);
   const halfStar = rating % 1 !== 0;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+  
 
   return (
     <div className="flex items-center">
@@ -55,7 +60,8 @@ const Star = ({ fill, half }) => (
 export default function ProductInfo({ product, currentUser }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
-
+  const { authUser } = useAuth();      // ✅ correct
+  const [isChatOpen, setIsChatOpen] = useState(false);  // ✅ correct
   const description = product.description || "No description available.";
   const canTruncate = description.length > 150;
   const displayDescription =
@@ -74,9 +80,9 @@ export default function ProductInfo({ product, currentUser }) {
             ₹{product.price || "0.00"}
           </span>
         </div>
-        <span className="inline-block bg-emerald-100 text-emerald-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+        {/* <span className="inline-block bg-emerald-100 text-emerald-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
           {product.condition || "Gently Used"}
-        </span>
+        </span> */}
         <p className="text-gray-800 text-base leading-relaxed">{displayDescription}</p>
         {canTruncate && (
           <button
@@ -111,27 +117,40 @@ export default function ProductInfo({ product, currentUser }) {
     </div>
   </div>
 
-  <StarRating rating={4.5} />
+  {/* <StarRating rating={4.5} /> */}
+</div>
+{/* --- Action Buttons --- */}
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+  {/* CHAT WITH SELLER */}
+  {!authUser ? (
+    <button
+      onClick={() => (window.location.href = "/login")}
+      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
+    >
+      <MessageIcon />
+      Login to Chat
+    </button>
+  ) : (
+    <button
+      onClick={() => setIsChatOpen(true)}
+      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
+    >
+      <MessageIcon />
+      Chat with Seller
+    </button>
+  )}
+
+  {/* MAKE OFFER */}
+  <button
+    onClick={() => setIsOfferModalOpen(true)}
+    className="w-full bg-gray-900 hover:bg-gray-800 text-white text-lg font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
+  >
+    <OfferIcon />
+    Make Offer
+  </button>
 </div>
 
-
-      {/* --- Action Buttons --- */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* <a
-          href={`mailto:${product.userEmail}`}
-          className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-center text-lg font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
-        >
-          <MessageIcon />
-          Message Seller
-        </a> */}
-        <button
-          onClick={() => setIsOfferModalOpen(true)}
-          className="w-full bg-gray-900 hover:bg-gray-800 text-white text-lg font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg"
-        >
-          <OfferIcon />
-          Make Offer
-        </button>
-      </div>
 
       {/* --- Offer Modal --- */}
       {isOfferModalOpen && (
@@ -145,6 +164,20 @@ export default function ProductInfo({ product, currentUser }) {
           onClose={() => setIsOfferModalOpen(false)}
         />
       )}
+      {/* --- Chat Modal --- */}
+{isChatOpen && authUser && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div className="w-full max-w-4xl h-full max-h-[90vh] bg-white rounded-lg shadow-2xl overflow-hidden">
+      <RelayyChat
+        receiverId={product.userId}
+        productId={product._id}
+        receiverName={product.username}
+        onClose={() => setIsChatOpen(false)}
+      />
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
