@@ -31,8 +31,8 @@ const MeetTheTeam = () => {
                   Leads the development of our AI and machine learning models. Responsible for building and refining the price prediction system that delivers accurate valuations for all listed items.
                 </p>
                 <div className="mt-4 flex justify-center gap-4">
-                  <a href="#" target="_blank" rel="noopener noreferrer"><Linkedin className="w-5 h-5 text-gray-500 hover:text-emerald-600 transition-colors" /></a>
-                  <a href="#" target="_blank" rel="noopener noreferrer"><Github className="w-5 h-5 text-gray-500 hover:text-emerald-600 transition-colors" /></a>
+                  <a href="https://www.linkedin.com/in/yajat-kumar-bharaj-6a6669295/" target="_blank" rel="noopener noreferrer"><Linkedin className="w-5 h-5 text-gray-500 hover:text-emerald-600 transition-colors" /></a>
+                  <a href="https://github.com/Sermystico" target="_blank" rel="noopener noreferrer"><Github className="w-5 h-5 text-gray-500 hover:text-emerald-600 transition-colors" /></a>
                 </div>
               </div>
 

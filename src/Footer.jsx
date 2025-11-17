@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Mail } from "lucide-react";
 import relayyLogo from "./relayy(logo).svg";
+import { Recycle, Layers, Clock, Zap } from "lucide-react";
+
 
 function Footer() {
   const [openSection, setOpenSection] = useState(null);
@@ -62,35 +64,60 @@ function Footer() {
 
           </div>
 
-          {/* COLUMN 2 — Newsletter */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase text-white tracking-wide mb-4">
-              STAY UPDATED
-            </h3>
+          {/* CAMPUS CIRCULAR ECONOMY – DESKTOP */}
+<div>
+  <h3 className="text-sm font-semibold uppercase text-white tracking-wide mb-4">
+    CAMPUS CIRCULAR ECONOMY
+  </h3>
 
-            <p className="text-sm text-emerald-100/90 leading-snug mb-3">
-              Get the latest news and updates delivered straight to your inbox.
-            </p>
+  <div className="space-y-4 text-emerald-200">
 
-            <div className="space-y-3 max-w-sm">
+    <div className="flex items-start gap-3">
+      <div className="w-9 h-9 rounded-lg bg-emerald-800/40 flex justify-center items-center">
+        <Recycle className="w-5 h-5 text-emerald-300" />
+      </div>
+      <p className="leading-snug">
+        Reduce waste by extending product life inside your own campus community.
+      </p>
+    </div>
 
-              <div className="relative">
-                <Mail
-                  size={16}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500"
-                />
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="w-full py-2 pl-10 pr-4 rounded-md text-emerald-900 placeholder-emerald-600 focus:ring-emerald-400 focus:border-emerald-400"
-                />
-              </div>
+    <div className="flex items-start gap-3">
+      <div className="w-9 h-9 rounded-lg bg-emerald-800/40 flex justify-center items-center">
+        <Layers className="w-5 h-5 text-emerald-300" />
+      </div>
+      <p className="leading-snug">
+        Make exchanges faster and smarter with peer-to-peer reuse.
+      </p>
+    </div>
 
-              <button className="w-full bg-emerald-400 text-emerald-900 font-semibold py-2 rounded-md hover:bg-emerald-300 transition shadow-md">
-                Subscribe
-              </button>
-            </div>
-          </div>
+    <div className="flex items-start gap-3">
+      <div className="w-9 h-9 rounded-lg bg-emerald-800/40 flex justify-center items-center">
+        <Clock className="w-5 h-5 text-emerald-300" />
+      </div>
+      <p className="leading-snug">
+        Save time, money, and effort by accessing essentials right on campus.
+      </p>
+    </div>
+
+    <div className="flex items-start gap-3">
+      <div className="w-9 h-9 rounded-lg bg-emerald-800/40 flex justify-center items-center">
+        <Zap className="w-5 h-5 text-emerald-300" />
+      </div>
+      <p className="leading-snug">
+        Enable a cleaner future with small actions that create campus-wide impact.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
         </div>
 
         {/* -------------------- MOBILE FOOTER (accordion) -------------------- */}
@@ -148,46 +175,63 @@ function Footer() {
             </div>
           </div>
 
-          {/* NEWSLETTER SECTION */}
-          <div>
-            <button
-              className="flex justify-between items-center w-full py-3"
-              onClick={() => toggle("news")}
-            >
-              <span className="font-semibold text-white text-base">Stay Updated</span>
-              <span className="text-xl">{openSection === "news" ? "−" : "+"}</span>
-            </button>
+          {/* CAMPUS CIRCULAR ECONOMY – MOBILE */}
+<div>
+  <button
+    className="flex justify-between items-center w-full py-3"
+    onClick={() => toggle("circular")}
+  >
+    <span className="font-semibold text-white text-base">Campus Circular Economy</span>
+    <span className="text-xl">{openSection === "circular" ? "−" : "+"}</span>
+  </button>
 
-            <div
-              className={`overflow-hidden transition-all duration-300 ${
-                openSection === "news" ? "max-h-96" : "max-h-0"
-              }`}
-            >
-              <div className="pt-2 max-w-sm">
+  <div
+    className={`overflow-hidden transition-all duration-300 ${
+      openSection === "circular" ? "max-h-[500px]" : "max-h-0"
+    }`}
+  >
+    <div className="pt-2 space-y-4">
 
-                <p className="text-sm text-emerald-100/90 leading-snug mb-3">
-                  Get updates delivered straight to your inbox.
-                </p>
+      <div className="flex items-start gap-3">
+        <div className="w-9 h-9 rounded-lg bg-emerald-800/40 flex justify-center items-center">
+          <Recycle className="w-5 h-5 text-emerald-300" />
+        </div>
+        <p className="text-sm text-emerald-100/90 leading-snug">
+          Reduce waste by extending product life within campus.
+        </p>
+      </div>
 
-                <div className="relative mb-3">
-                  <Mail
-                    size={16}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Your email address"
-                    className="w-full py-2 pl-10 pr-4 rounded-md text-emerald-900 placeholder-emerald-600 focus:ring-emerald-400 focus:border-emerald-400"
-                  />
-                </div>
+      <div className="flex items-start gap-3">
+        <div className="w-9 h-9 rounded-lg bg-emerald-800/40 flex justify-center items-center">
+          <Layers className="w-5 h-5 text-emerald-300" />
+        </div>
+        <p className="text-sm text-emerald-100/90 leading-snug">
+          Smarter peer-to-peer reuse for students.
+        </p>
+      </div>
 
-                <button className="w-full bg-emerald-400 text-emerald-900 font-semibold py-2 rounded-md hover:bg-emerald-300 transition shadow-md">
-                  Subscribe
-                </button>
+      <div className="flex items-start gap-3">
+        <div className="w-9 h-9 rounded-lg bg-emerald-800/40 flex justify-center items-center">
+          <Clock className="w-5 h-5 text-emerald-300" />
+        </div>
+        <p className="text-sm text-emerald-100/90 leading-snug">
+          Save time and money by accessing essentials nearby.
+        </p>
+      </div>
 
-              </div>
-            </div>
-          </div>
+      <div className="flex items-start gap-3">
+        <div className="w-9 h-9 rounded-lg bg-emerald-800/40 flex justify-center items-center">
+          <Zap className="w-5 h-5 text-emerald-300" />
+        </div>
+        <p className="text-sm text-emerald-100/90 leading-snug">
+          Your actions contribute to a cleaner, smarter campus.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
         </div>
 
