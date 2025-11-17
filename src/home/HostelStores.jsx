@@ -49,15 +49,18 @@ const HostelStores = () => {
   };
 
   return (
-    <section className="py-12 px-4">
+    <section className="py-8 sm:py-12 px-4"> 
       <div className="max-w-6xl mx-auto">
         
         {/* --- 5. Title and Scroll Buttons --- */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900">
+        <div className="flex justify-between items-center mb-6 sm:mb-8"> 
+          {/* Smaller Title: text-2xl on mobile, text-3xl on small screens, text-4xl on medium+ */}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
             Browse by Hostel
           </h1>
-          <div className="flex space-x-2">
+          
+          {/* Scroll buttons hidden on mobile (md:flex ensures they show on desktop) */}
+          <div className="hidden md:flex space-x-2">
             <button
               onClick={() => scroll(-300)}
               className="p-2 rounded-full bg-white shadow-md text-gray-800 hover:bg-gray-100 transition"
@@ -78,28 +81,39 @@ const HostelStores = () => {
         {/* --- 6. The Scrollable Container --- */}
         <div 
           ref={scrollContainerRef}
-          className="flex overflow-x-auto space-x-6 pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          // Tighter spacing on mobile (space-x-4)
+          className="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 touch-pan-x [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         >
           {hostels.map((hostel) => (
             <div
               key={hostel.name}
-              // --- 7. Set fixed width and prevent shrinking ---
-              className="w-72 flex-shrink-0 bg-white rounded-lg shadow-md overflow-hidden 
+              // CRITICAL FIX: Card width significantly reduced. 
+              // w-[50vw] on mobile (show two partial cards) or w-40 (fixed, small size). 
+              // Let's use **w-40** (160px) for a much smaller, fixed-size card.
+              className="w-40 sm:w-48 md:w-72 flex-shrink-0 bg-white rounded-lg shadow-md overflow-hidden 
                          hover:shadow-xl transition-shadow duration-300 cursor-pointer"
               onClick={() => handleHostelClick(hostel.name)}
             >
+              {/* Image height dramatically reduced to make the card shorter */}
               <img 
                 src={hostel.img} 
                 alt={hostel.name} 
-                className="w-full h-48 object-cover bg-gray-200"
+                className="w-full h-28 sm:h-36 md:h-48 object-cover bg-gray-200"
                 loading="lazy"
               />
-              <div className="p-4 text-center">
-                <h3 className="font-semibold text-lg text-gray-800">{hostel.name}</h3>
+              {/* Reduced padding and font size for a small, compact look */}
+              <div className="p-2 text-center">
+                <h3 className="font-semibold text-sm sm:text-base text-gray-800 line-clamp-1">{hostel.name}</h3>
               </div>
             </div>
           ))}
         </div>
+        
+        {/* Scroll hint visible only on mobile */}
+        <p className="text-center text-sm text-gray-500 mt-4 md:hidden">
+            ← Scroll horizontally to see more hostels →
+        </p>
+        
       </div>
     </section>
   );

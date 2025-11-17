@@ -124,7 +124,7 @@ const Home_page = () => {
   //
   // --- 4. "recentProducts" IS NOW DEFINED ---
   //
-  const recentProducts = filteredProducts.slice(0, 6);
+  const recentProducts = filteredProducts.slice(0, 8);
 
 
   // Show main loader
