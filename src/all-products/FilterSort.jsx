@@ -90,8 +90,8 @@ const FilterSort = ({ filters, setFilters, sortBy, setSortBy }) => {
         />
         <FilterDropdown 
           options={hostels}
-          value={filters.hostel}
-          onChange={(val) => handleFilterChange('hostel', val)}
+          value={filters.userHostel}
+          onChange={(val) => handleFilterChange('userHostel', val)}
           placeholder="Hostel"
         />
         <button 

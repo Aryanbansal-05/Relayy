@@ -86,7 +86,7 @@ const HostelStores = () => {
               // --- 7. Set fixed width and prevent shrinking ---
               className="w-72 flex-shrink-0 bg-white rounded-lg shadow-md overflow-hidden 
                          hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-              onClick={() => handleHostelClick(hostel.pathValue)}
+              onClick={() => handleHostelClick(hostel.name)}
             >
               <img 
                 src={hostel.img} 

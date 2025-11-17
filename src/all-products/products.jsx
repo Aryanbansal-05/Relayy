@@ -25,6 +25,7 @@ function decodeJwtPayload(token) {
 
 const ProductBrowser = () => {
   const [searchParams] = useSearchParams();
+  const hostelFromUrl = searchParams.get("userHostel") || "all";
   const categoryFromUrl = searchParams.get("category") || "all";
   const qFromUrl = (searchParams.get("q") || "").trim(); // search term from URL
 
@@ -36,7 +37,7 @@ const ProductBrowser = () => {
   const [filters, setFilters] = useState({
     category: categoryFromUrl,
     price: "all",
-    hostel: "all",
+    userHostel: hostelFromUrl,
   });
 
   const [sortBy, setSortBy] = useState("newest");
@@ -105,9 +106,9 @@ const ProductBrowser = () => {
     }
 
     // Hostel filter
-    if (filters.hostel !== "all") {
+    if (filters.userHostel !== "all") {
       tempProducts = tempProducts.filter(
-        (p) => p.hostel && p.hostel.toLowerCase() === filters.hostel.toLowerCase()
+        (p) => p.userHostel && p.userHostel.toLowerCase() === filters.userHostel.toLowerCase()
       );
     }
 
