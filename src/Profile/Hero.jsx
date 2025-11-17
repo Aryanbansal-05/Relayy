@@ -34,19 +34,6 @@ const Hero = () => {
     fetchUserAndAds();
   }, [backendURL, navigate]);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(
-        `${backendURL}/api/v1/users/logout`,
-        {},
-        { withCredentials: true }
-      );
-      localStorage.removeItem("token");
-      navigate("/");
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-  };
 
   if (loading)
     return (
@@ -107,12 +94,14 @@ const Hero = () => {
                 Edit Profile
               </button>
 
-              <button
-                onClick={handleLogout}
+              {/* delete button */}
+              {/* <button
+              onClick={handleDeleteProfile}
                 className="px-6 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium transition"
               >
-                Logout
-              </button>
+              {isDeleting ? <Loader2 className="animate-spin w-5 h-5" /> : "Delete Profile"}
+              
+              </button> */}
             </div>
           </div>
         </div>

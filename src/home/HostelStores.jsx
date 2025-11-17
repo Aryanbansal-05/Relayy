@@ -30,11 +30,13 @@ const hostels = hostelData.map(hostel => {
 
 const HostelStores = () => {
   const navigate = useNavigate();
+  const handleHostelClick = (hostelName) => {
+    // This creates the URL: /all-products?category=Electronics
+    navigate(`/all-products?userHostel=${hostelName}`);
+  };
+
   const scrollContainerRef = useRef(null); // <-- 3. Create the ref
 
-  const handleHostelClick = (hostelPath) => {
-    navigate(`/hostel/${hostelPath}`);
-  };
 
   // <-- 4. Create the scroll function
   const scroll = (scrollOffset) => {
