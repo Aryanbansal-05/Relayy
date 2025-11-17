@@ -116,14 +116,7 @@ const Contact = () => {
         )}
       </form>
 
-      <div className="text-center mt-6">
-        <p className="text-sm text-gray-700">
-          Or email us directly at
-          <a href="mailto:support@relayy.shop" className="font-semibold text-emerald-700 hover:underline ml-1">
-            support@relayy.shop
-          </a>
-        </p>
-      </div>
+      
     </div>
   );
 };
