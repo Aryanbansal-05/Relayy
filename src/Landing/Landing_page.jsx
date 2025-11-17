@@ -27,7 +27,7 @@ const RelayyLandingPage = () => {
       onClick={() => navigate('/contact')}
       className="font-body font-medium text-sm sm:text-lg text-emerald-800/80 py-2 px-3 sm:py-3 transition-all duration-300 transform hover:scale-110 hover:text-emerald-900"
     >
-      Contact
+      Contact Us
     </button>
     <button
       onClick={() => navigate('/about')}

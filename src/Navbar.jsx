@@ -147,7 +147,7 @@ function Navbar({ searchQuery, setSearchQuery }) {
           )}
 
           <Link to="/contact" className={`relative text-gray-700 hover:text-emerald-700 transition ${isActive("/contact") ? "text-emerald-700 font-semibold before:absolute before:-bottom-1 before:left-0 before:w-full before:h-0.5 before:bg-emerald-600" : ""}`}>
-            Contact
+            Contact Us
           </Link>
           <Link to="/about" className={`relative text-gray-700 hover:text-emerald-700 transition ${isActive("/about") ? "text-emerald-700 font-semibold before:absolute before:-bottom-1 before:left-0 before:w-full before:h-0.5 before:bg-emerald-600" : ""}`}>
             About Us
