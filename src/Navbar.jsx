@@ -16,6 +16,14 @@ function Navbar({ searchQuery, setSearchQuery }) {
 
   const backendURL = import.meta.env.VITE_BACKEND_URL || "https://relayy-backend-9war.onrender.com";
 
+  const [user, setUser] = useState(null);
+
+useEffect(() => {
+  axios.get(`${backendURL}/api/v1/users/verify`, { withCredentials: true })
+       .then(res => setUser(res.data.user))
+       .catch(err => console.error(err));
+}, []);
+
   // --- Sync input value with URL 'q' param when on /all-products
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -181,20 +189,22 @@ function Navbar({ searchQuery, setSearchQuery }) {
           {/* Profile Dropdown */}
           <div className="relative" ref={profileMenuRef}>
             <button
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="p-2.5 rounded-full text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition relative"
-              title="Account"
-            >
-              <User className="w-6 h-6" />
-            </button>
+    onClick={() => setIsProfileOpen(!isProfileOpen)}
+    className="rounded-full p-0.5 bg-gradient-to-br from-emerald-200 via-emerald-400 to-emerald-500 hover:opacity-90 transition"
+    title="Account"
+  >
+    <img
+  src={`https://ui-avatars.com/api/?name=${user?.username || "A"}&background=fff&color=10755e&size=64&bold=true`}
+  alt="User Avatar"
+  className="w-9 h-9 rounded-full border-2 border-white"
+/>
+
+  </button>
 
             {isProfileOpen && (
               <div className="absolute right-0 mt-3 w-52 bg-white rounded-lg shadow-xl z-50 py-2 border border-gray-100 animate-fade-in-down">
                 <Link to="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition">
                   <User className="w-4 h-4 mr-2 text-emerald-500" /> My Profile
-                </Link>
-                <Link to="/my-listings" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition">
-                  <LayoutList className="w-4 h-4 mr-2 text-emerald-500" /> My Listings
                 </Link>
                 <Link to="/inbox" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition">
                   <MessageSquare className="w-4 h-4 mr-2 text-emerald-500" /> Messages
