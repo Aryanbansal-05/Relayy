@@ -62,11 +62,11 @@ export default function VerifyOtp() {
 
         try {
             // Simulated API call - replace with actual axios call in a real environment
-            // const res = await axios.post(`${backendURL}/api/v1/users/verify-otp`, { email, otp });
+            const res = await axios.post(`${backendURL}/api/v1/users/verify-otp`, { email, otp });
             
             // Simulating a successful response for demonstration
             await new Promise(resolve => setTimeout(resolve, 1500));
-            const res = { data: { message: "Email verified successfully!" } };
+            // const res = { data: { message: "Email verified successfully!" } };
 
             setMessage(res.data.message);
             setIsError(false);
