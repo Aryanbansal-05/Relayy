@@ -5,6 +5,8 @@ import Cookies from "js-cookie";
 import NavbarLanding from "../NavbarLanding";
 import loginimg from "./loginimage.png";
 import { useAuth } from "../Context/AuthContext";
+import { Eye, EyeOff } from "lucide-react";
+
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -13,6 +15,8 @@ function Login() {
   const { login } = useAuth(); // 4. Get the login function from context
 const [error, setError] = useState(null); // 3. Add error state
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const backendURL = "https://relayy-backend-9war.onrender.com";
 
@@ -50,7 +54,7 @@ const [error, setError] = useState(null); // 3. Add error state
 
   return (
     
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className=" min-h-screen flex flex-col bg-white">
     <NavbarLanding />
       {isLoading && (
         <div className="fixed inset-0 bg-white/80 flex justify-center items-center z-50">
@@ -106,16 +110,28 @@ const [error, setError] = useState(null); // 3. Add error state
                 </label>
 
                 <label className="flex flex-col">
-                  <p className="text-base font-medium pb-2">Password</p>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800"
-                    placeholder="Enter your password"
-                    required
-                  />
-                </label>
+  <p className="text-base font-medium pb-2">Password</p>
+  
+  <div className="relative">
+    <input
+      type={showPassword ? "text" : "password"}
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      className="rounded-xl h-14 p-4 pr-12 bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-gray-800 w-full"
+      placeholder="Enter your password"
+      required
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-700 hover:text-emerald-900"
+    >
+      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+    </button>
+  </div>
+</label>
+
 
                 <div className="flex justify-end pt-2">
                   <a href="/forgot" className="text-sm font-medium text-emerald-700 hover:underline">

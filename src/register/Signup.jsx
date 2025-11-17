@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NavbarLanding from "../NavbarLanding";
 import loginimg from "./loginimage.png";
+import { Eye, EyeOff } from "lucide-react";
+
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -18,6 +20,9 @@ function Signup() {
   const [emailError, setEmailError] = useState("");
   const [mobileError, setMobileError] = useState(""); // <-- new
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
   const backendURL = "https://relayy-backend-9war.onrender.com";
 
@@ -333,31 +338,53 @@ function Signup() {
                 
                 {/* Password */}
                 <label className="flex flex-col">
-                  <p className="text-base font-medium pb-2">Password</p>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
-                    placeholder="Enter your password"
-                    required
-                  />
-                </label>
+  <p className="text-base font-medium pb-2">Password</p>
+
+  <div className="relative">
+    <input
+      type={showPassword ? "text" : "password"}
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      className="rounded-xl h-14 p-4 pr-12 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none w-full"
+      placeholder="Enter your password"
+      required
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600"
+    >
+      {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
+    </button>
+  </div>
+</label>
+
 
                 {/* Confirm Password */}
                 <label className="flex flex-col">
-                  <p className="text-base font-medium pb-2">
-                    Confirm Password
-                  </p>
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="rounded-xl h-14 p-4 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none"
-                    placeholder="Confirm your password"
-                    required
-                  />
-                </label>
+  <p className="text-base font-medium pb-2">Confirm Password</p>
+
+  <div className="relative">
+    <input
+      type={showConfirmPassword ? "text" : "password"}
+      value={confirmPassword}
+      onChange={(e) => setConfirmPassword(e.target.value)}
+      className="rounded-xl h-14 p-4 pr-12 bg-emerald-100 focus:ring-2 focus:ring-emerald-400 outline-none w-full"
+      placeholder="Confirm your password"
+      required
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600"
+    >
+      {showConfirmPassword ? <EyeOff size={22} /> : <Eye size={22} />}
+    </button>
+  </div>
+</label>
+
 
                 {/* Submit */}
                 <button

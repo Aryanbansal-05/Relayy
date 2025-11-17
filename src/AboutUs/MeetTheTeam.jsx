@@ -26,9 +26,9 @@ const MeetTheTeam = () => {
                   alt="Team Member 1"
                 />
                 <h3 className="font-display text-2xl font-bold text-gray-900">Yajat Kumar Bharaj</h3>
-                <p className="font-sans text-md text-emerald-700 font-medium">AI/ML Model Specialist</p>
-                <p className="font-sans text-gray-600 text-sm mt-2">
-                  Responsible for developing and maintaining the AI/ML models, specifically the accurate price prediction model for all listed items
+                <p className=" text-md text-emerald-700 font-medium">AI/ML Model Specialist</p>
+                <p className=" text-gray-600 text-sm mt-2">
+                  Leads the development of our AI and machine learning models. Responsible for building and refining the price prediction system that delivers accurate valuations for all listed items.
                 </p>
                 <div className="mt-4 flex justify-center gap-4">
                   <a href="#" target="_blank" rel="noopener noreferrer"><Linkedin className="w-5 h-5 text-gray-500 hover:text-emerald-600 transition-colors" /></a>
@@ -44,9 +44,9 @@ const MeetTheTeam = () => {
                   alt="Team Member 2"
                 />
                 <h3 className="font-display text-2xl font-bold text-gray-900">Aryan Bansal</h3>
-                <p className="font-sans text-md text-emerald-700 font-medium">Full-Stack Developer</p>
-                <p className="font-sans text-gray-600 text-sm mt-2">
-                  Drives development with a focus on system architecture, implementing reliable, high-performance engines and core application functionalities.
+                <p className=" text-md text-emerald-700 font-medium">Full-Stack Developer</p>
+                <p className=" text-gray-600 text-sm mt-2">
+                  Focuses on designing and building the backend architecture of the platform. Ensures that all core systems run smoothly, securely, and efficiently, powering the application’s overall functionality.
                 </p>
                 <div className="mt-4 flex justify-center gap-4">
                   <a href="https://www.linkedin.com/in/aryan-bansal-44a2a6260?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer"><Linkedin className="w-5 h-5 text-gray-500 hover:text-emerald-600 transition-colors" /></a>
@@ -62,9 +62,9 @@ const MeetTheTeam = () => {
                   alt="Team Member 3"
                 />
                 <h3 className="font-display text-2xl font-bold text-gray-900">Safal Kaur</h3>
-                <p className="font-sans text-md text-emerald-700 font-medium">Full-Stack Developer</p>
-                <p className="font-sans text-gray-600 text-sm mt-2">
-                  Specializes in optimizing design translation and crafting the intuitive, responsive experience that users interact with directly.
+                <p className=" text-md text-emerald-700 font-medium">Full-Stack Developer</p>
+                <p className=" text-gray-600 text-sm mt-2">
+                  Specializes in crafting clean, responsive, and intuitive user interfaces. Transforms designs into seamless user experiences and ensures the platform looks and feels great across all devices.
                 </p>
                 <div className="mt-4 flex justify-center gap-4">
                   <a href="https://www.linkedin.com/in/safal-kaur-67379727a?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer"><Linkedin className="w-5 h-5 text-gray-500 hover:text-emerald-600 transition-colors" /></a>
@@ -80,9 +80,9 @@ const MeetTheTeam = () => {
                   alt="Team Member 4"
                 />
                 <h3 className="font-display text-2xl font-bold text-gray-900">Saanchi Gupta</h3>
-                <p className="font-sans text-md text-emerald-700 font-medium">Chat System Engineer</p>
-                <p className="font-sans text-gray-600 text-sm mt-2">
-                  Manages the real-time chat function using Socket.IO, ensuring fast, reliable, and low-latency communication between users.
+                <p className=" text-md text-emerald-700 font-medium">Chat System Engineer</p>
+                <p className=" text-gray-600 text-sm mt-2">
+                  Manages the real-time communication system powered by Socket.IO. Ensures fast, stable, and low-latency chat interactions, enabling users to communicate instantly and reliably.
                 </p>
                 <div className="mt-4 flex justify-center gap-4">
                   <a href="https://www.linkedin.com/in/saanchi-gupta-9711942a8/" target="_blank" rel="noopener noreferrer"><Linkedin className="w-5 h-5 text-gray-500 hover:text-emerald-600 transition-colors" /></a>
