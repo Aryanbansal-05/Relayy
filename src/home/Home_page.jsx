@@ -9,7 +9,6 @@ import Hero from './Hero';
 import Categories from './Categories';
 import HostelStores from './HostelStores'; // This is correct
 import RecentlyListed from './RecentlyListed';
-import Features from './Features';
 
 // Icons for the features section
 import { PlusCircle, ShieldCheck, Truck } from 'lucide-react';
@@ -31,24 +30,7 @@ function decodeJwtPayload(token) {
   }
 }
 
-// --- Static Features Data ---
-const features = [
-  { 
-    name: 'Easy Listings', 
-    desc: 'Quickly and easily list your items for sale in just a few steps.',
-    icon: PlusCircle 
-  },
-  { 
-    name: 'Secure Payments', 
-    desc: 'All transactions are secure, keeping your money and data safe.', 
-    icon: ShieldCheck 
-  },
-  { 
-    name: 'Campus-wide Delivery', 
-    desc: 'Arrange for easy pickup or delivery right on campus.', 
-    icon: Truck 
-  },
-];
+
 
 // --- The Main Page Component ---
 const Home_page = () => {
@@ -174,7 +156,6 @@ const Home_page = () => {
           loading={loading}
         />
         
-        <Features />
         
       </main>
 
