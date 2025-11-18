@@ -163,8 +163,8 @@ const ProductBrowser = () => {
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
   return (
-    <main className="max-w-6xl mx-auto py-8 px-4">
-      <h1 className="text-4xl font-bold text-gray-900 mb-6">Find Your Next Treasure</h1>
+    <main className="max-w-6xl mx-auto py-6 md:py-8 px-4">
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 md:mb-6">Find Your Next Treasure</h1>
 
       <FilterSort
         filters={filters}
@@ -182,7 +182,7 @@ const ProductBrowser = () => {
           No items found{qFromUrl ? ` for "${qFromUrl}"` : ""}.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12">
           {currentProducts.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}

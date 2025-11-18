@@ -73,46 +73,64 @@ const FilterSort = ({ filters, setFilters, sortBy, setSortBy }) => {
   };
 
   return (
-    <>
-      {/* --- Filter Dropdowns --- */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <FilterDropdown 
-          options={categories}
-          value={filters.category}
-          onChange={(val) => handleFilterChange('category', val)}
-          placeholder="Category"
-        />
-        <FilterDropdown 
-          options={prices}
-          value={filters.price}
-          onChange={(val) => handleFilterChange('price', val)}
-          placeholder="Price"
-        />
-        <FilterDropdown 
-          options={hostels}
-          value={filters.userHostel}
-          onChange={(val) => handleFilterChange('userHostel', val)}
-          placeholder="Hostel"
-        />
-        <button 
-          className="bg-emerald-700 text-white font-semibold px-6 py-2 rounded-lg 
-                     hover:bg-emerald-800 transition-colors w-full md:w-auto"
-        >
-          Apply
-        </button>
-      </div>
+  <>
+    {/* --- Filter Dropdowns (Single Row Always) --- */}
+    <div
+      className="flex gap-4 mb-6 overflow-x-auto whitespace-nowrap pb-1
+                 [&>*]:flex-shrink-0"
+    >
+      <FilterDropdown
+        options={categories}
+        value={filters.category}
+        onChange={(val) => handleFilterChange("category", val)}
+        placeholder="Category"
+      />
 
-      {/* --- Sort Options --- */}
-      <div className="flex items-center gap-4 mb-6">
-        <span className="text-gray-800 font-semibold">Sort by:</span>
-        <div className="flex gap-2">
-          <SortButton value="newest" label="Newest" sortBy={sortBy} setSortBy={setSortBy} />
-          <SortButton value="priceLowToHigh" label="Price: Low to High" sortBy={sortBy} setSortBy={setSortBy} />
-          <SortButton value="priceHighToLow" label="Price: High to Low" sortBy={sortBy} setSortBy={setSortBy} />
-        </div>
+      <FilterDropdown
+        options={prices}
+        value={filters.price}
+        onChange={(val) => handleFilterChange("price", val)}
+        placeholder="Price"
+      />
+
+      <FilterDropdown
+        options={hostels}
+        value={filters.userHostel}
+        onChange={(val) => handleFilterChange("userHostel", val)}
+        placeholder="Hostel"
+      />
+
+      <button
+        className="bg-emerald-700 text-white font-semibold px-6 py-2 rounded-lg
+                   hover:bg-emerald-800 transition-colors"
+      >
+        Apply
+      </button>
+    </div>
+
+    {/* --- Sort Options (Also single row) --- */}
+    <div className="flex items-center gap-4 mb-6 overflow-x-auto whitespace-nowrap pb-1">
+      <span className="text-gray-800 font-semibold flex-shrink-0">Sort by:</span>
+
+      <div className="flex gap-2 flex-shrink-0">
+        <SortButton value="newest" label="Newest" sortBy={sortBy} setSortBy={setSortBy} />
+        <SortButton
+          value="priceLowToHigh"
+          label="Price: Low to High"
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+        <SortButton
+          value="priceHighToLow"
+          label="Price: High to Low"
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
       </div>
-    </>
-  );
+    </div>
+  </>
+);
+
 };
 
 export default FilterSort;
