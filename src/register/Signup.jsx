@@ -197,7 +197,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
         <div className="flex flex-1 flex-wrap">
           {/* LEFT SECTION */}
           <div
-            className="w-full lg:w-1/2 flex items-start justify-center p-8 lg:p-12 order-2 lg:order-1"
+            className="w-full lg:w-1/2 flex items-start justify-center p-8 lg:p-12 order-1 lg:order-1"
             style={{
               background:
                 "linear-gradient(to bottom right, #D1FAE5, #FFFFFF, #A7F3D0)",
@@ -419,7 +419,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
           </div>
 
           {/* RIGHT SECTION */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2 relative overflow-hidden">
+          <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-1 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-green-100 to-emerald-200 opacity-30"></div>
             <img
               src={loginimg}
